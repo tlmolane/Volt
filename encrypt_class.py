@@ -39,10 +39,16 @@ class Volt:
 
     def type_exists(self, type):
         if os.path.exists(os.path.join(self.path, type)):
-            return True
+            return (True, os.path.join(self.path, type))
         else:
             #print(os.path.exists(os.path.join(self.path)))
             return False
+
+    def encrypt():
+        pass
+
+    def decrypt():
+        pass
 
 
 
@@ -51,6 +57,7 @@ class Volt:
 
         private_key_name = private_key_name + ext
         public_key_name  = public_key_name  + ext
+
 
         try:
             if replace != False:
@@ -67,7 +74,7 @@ class Volt:
 
             print("[INFO]: Creating Keys...")
 
-            if self.volt_exists() == True and self.type_exists(type) == True:
+            if self.volt_exists() == True and self.type_exists(type)[0] == True:
 
                 private_key = rsa.generate_private_key(
                                 public_exponent = pb_exp,
@@ -204,6 +211,19 @@ class Volt:
         except FileNotFoundError:
             print("[INFO] '{}' Volt for {} {} does not exists".format(type, self.first, self.last))
             return None
+
+    # def key_pair_paths(self, type):
+    #     try:
+    #         print('this')
+    #         if self.volt_exists() == True and self.type_exists(type) == True:
+    #             private_key_location = os.path.join(self.path)
+    #
+    #         else:
+    #             raise FileNotFoundError
+    #
+    #     except Exception as e:
+    #         print(e)
+    #     pass
 
 
 volt_1 = Volt('Tshepo', 'Molane')
