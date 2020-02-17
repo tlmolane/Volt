@@ -52,12 +52,11 @@ class Volt:
 
 
 
-    def create_keys(self, save_path, type, private_key_name = 'private_key', public_key_name = 'public_key' ,  ext = '.pem',
+    def create_keys(self, save_path, type, private_key_name = 'private_key', public_key_name = 'public_key', pickel_file='passwords.pickle', ext = '.pem',
                     privatekey_password = None, encryption = False, replace = False, pb_exp = 65537, ky_size = 4096):
 
         private_key_name = private_key_name + ext
         public_key_name  = public_key_name  + ext
-
 
         try:
             if replace != False:
@@ -137,6 +136,38 @@ class Volt:
         except Exception as e:
             print(e)
             return None
+
+        try:
+
+            accounts = {}
+            accounts_str = json.dumps(accounts)
+            accounts_byte = accounts_str.encode('utf-8')
+
+            with open(os.path.join(self.path, type, private_key_name), 'rb') as key_file:
+                public_key = serialization.load_pem_public_key(
+                            key_file.read(),
+                            backend = default_backend()
+                )
+
+            encrypted = public_key.encrypt(
+                        accounts_byte,
+                        padding.OAEP(
+                        mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                        algorithm = hashes.SHA256(),
+                        label=None
+                    )
+                )
+
+
+            with open(os.path.join(self.path, type, pickle_file), 'wb') as f:
+                pickle.dump(encrypted, f)
+
+            f.close()
+            key_file.close()
+
+            print("[INFO] new dictionary has been encrypted \n use corresponding private key to decrypt" )
+        except Exception as e:
+            print(e)
 
 
     def create_volt_type(self, type="default"):
