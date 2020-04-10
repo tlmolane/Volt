@@ -3,6 +3,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
+import create
 import argparse
 import getpass
 import pickle
@@ -14,6 +15,8 @@ import os
 "premise: google has more resources to protect your passwords. keeping your password on your machine makes you more vulnerable..."
 "to bigger organizations or persons with pertinent computer expertise - so there is a big asymmetry in risk."
 "In other words, this small project was created for two reasons: for personal use, inspired by the personal goal to improve on python programming skills"
+
+
 
 
 abs_path = os.path.dirname(os.path.abspath(__file__))
@@ -324,7 +327,21 @@ def main(args):
 
                         if confirmation.lower().startswith('y'):
                             decrypted_dict = decrypt(privatekey_password = private_key_password)
-                            print(decrypted_dict[account])
+                            pass_list = list(decrypted_dict[account])
+                            password_len = len(decrypted_dict[account])
+                            portion = int(round((1/3)*(password_len),0))
+                            #print(portion)
+
+                            for i in range(0, portion):
+
+                                pass_list[i] = '*'
+                                pass_list[-i] = '*'
+
+
+                            print("".join(pass_list))
+                            #print(decrypted_dict[account])
+
+                            #print(decrypted_dict[account])
                             break
                         elif confirmation.lower().startswith('n'):
                             continue
@@ -339,6 +356,10 @@ def main(args):
             #variable = getpass.getpass(prompt='Enter private key password: ')
             create_dict()
             return
+
+        # if args.create_keys:
+        #
+        #     return
 
         if args.remove:
 
@@ -386,6 +407,8 @@ def parse_arguments(argv):
         help ='encrypt new passwords')
     parser.add_argument('-c','--create', required=False, action='store_true',
         help ='encrypt new empty dictionary')
+    parser.add_argument('-k','--create_keys', required=False, action='store_true',
+        help ='create encryption keys')
     parser.add_argument('-d','--decrypt', required=False, action='store_true',
         help ='decrypt new passwords')
     parser.add_argument('-r','--remove', required=False, action='store_true',

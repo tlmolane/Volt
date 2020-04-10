@@ -84,38 +84,32 @@ class Volt:
 
                 public_key = private_key.public_key()
 
-                if encryption == True and private_key_name != None:
+                if encryption == True and private_key_password == None:
+                    raise Exception("private key password cannot be None")
+                if encryption == False and privatekey_password !=None:
+                    raise Exception("serialization with encryption is False but password is provided")
 
-                    "Private Key"
-                    pem = private_key.private_bytes(
-                                    encoding = serialization.Encoding.PEM,
-                                    format = serialization.PrivateFormat.PKCS8,
-                                    #encryption_algorithm = serialization.BestAvailableEncryption(b'test')
-                                    encryption_algorithm=serialization.BestAvailableEncryption(b'%b' % privatekey_password.encode('utf-8'))
-                    )
-
-                    "Public key"
-                    pem_2 = public_key.public_bytes(
-                                    encoding = serialization.Encoding.PEM,
-                                    format = serialization.PublicFormat.SubjectPublicKeyInfo
-                    )
-
+                if encryption == True and private_key_password != None:
+                    serialize = serialization.BestAvailableEncryption(b'%b' % privatekey_password.encode('utf-8'))
                 else:
-                    #print("gets here when encryption is false")
-                    "Private key"
-                    pem = private_key.private_bytes(
-                                    encoding = serialization.Encoding.PEM,
-                                    format = serialization.PrivateFormat.PKCS8,
-                                    #encryption_algorithm = serialization.BestAvailableEncryption(b'test')
-                                    #encryption_algorithm=serialization.BestAvailableEncryption(b'%b' % privatekey_password.encode('utf-8'))
-                                    encryption_algorithm=serialization.NoEncryption()
+                    serialize = serialization.NoEncryption()
+
+
+                "Private Key"
+                pem = private_key.private_bytes(
+                                encoding = serialization.Encoding.PEM,
+                                format = serialization.PrivateFormat.PKCS8,
+                                #encryption_algorithm = serialization.BestAvailableEncryption(b'test')
+                                encryption_algorithm=serialize)
+            
+
+                "Public key"
+                pem_2 = public_key.public_bytes(
+                                encoding = serialization.Encoding.PEM,
+                                format = serialization.PublicFormat.SubjectPublicKeyInfo
                     )
 
-                    "Public key"
-                    pem_2 = public_key.public_bytes(
-                                    encoding = serialization.Encoding.PEM,
-                                    format = serialization.PublicFormat.SubjectPublicKeyInfo
-                    )
+
 
                 with open(os.path.join(save_path, type,  private_key_name), 'wb') as f:
                     f.write(pem)
