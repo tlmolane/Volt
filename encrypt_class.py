@@ -79,7 +79,7 @@ class Volt:
                 if os.path.exists(dict_path):
                     return (True, os.path.join(self.path, type, dict_path))
                 else:
-                    return False
+                    return (False, os.path.join(self.path, type, dict_path))
 
         except Exception as e:
             print(e)
@@ -430,7 +430,7 @@ type_3 = 'development'
 
 # pass match test:
 
-print(volt_1.pass_match(type_2, 'apexsingularitymim012', private_key_name = 'private_key', public_key_name = 'public_key'))
+print(volt_1.pass_match(type_2, 'apexsingularitymim01', private_key_name = 'private_key', public_key_name = 'public_key'))
 
 #-------- end of test field 1
 
