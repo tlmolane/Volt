@@ -147,22 +147,27 @@ class Volt:
             #print('this', self.keys_exist(type, private_key_name, public_key_name))
             #print('gets here')
             if self.keys_exist(type, private_key_name, public_key_name)[0] == True:
-                with open(os.path.join(self.path, type, private_key_name + '.pem'), 'rb') as key_file:
-                    private_key = serialization.load_pem_private_key(
-                                key_file.read(),
-                                password = b'%b' % private_key_password.encode('utf-8'),
-                                backend = default_backend()
-                    )
 
-                key_file.close()
+                try:
+                    with open(os.path.join(self.path, type, private_key_name + '.pem'), 'rb') as key_file:
+                        private_key = serialization.load_pem_private_key(
+                                    key_file.read(),
+                                    password = b'%b' % private_key_password.encode('utf-8'),
+                                    backend = default_backend()
+                        )
 
-                return True
+                    key_file.close()
+
+                    return True
+                except ValueError as e:
+                    print(e)
+                    return False
             else:
                 raise FileNotFoundError("[INFO]: File {} does not exist".format(os.path.join(self.path, type, private_key_name + '.pem')))
         except Exception as e:
             #print('gets here')
             print(e)
-            return False
+            #return False
 
 
     def decrypt(self, type, privatekey_password,  dict_name, private_key_name = 'private_key',
