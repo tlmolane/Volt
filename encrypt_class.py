@@ -207,6 +207,7 @@ class Volt:
                     decrypted_dictionary = json.loads(decrypted.decode('utf-8'))
                     # print(decrypted_dictionary)
                     return decrypted_dictionary
+
                 except FileNotFoundError as e:
                     #print(e()
                     return (False, e)
@@ -347,33 +348,37 @@ class Volt:
         except Exception as e:
             print(e)
 
-    def view_keys(self, private_key_password, private_key_name = 'private_key', public_key_name = 'public_key', private=False, Public = True):
+    def view_keys(self, private_key_name = 'private_key', public_key_name = 'public_key', private=False, public= True):
+        "Caution: this method is an iterator"
         try:
-            private_key_name = public_key_name.split('.')[0]
+            private_key_name = private_key_name.split('.')[0]
             public_key_name = public_key_name.split('.')[0]
-
 
             if self.keys_exist(type, private_key_name, public_key_name)[0]:
 
-                if private == True and  public == False:
-                    with open(os.path.join(self.path, type, private_key_name + '.pem')) as key_file:
+                if private == True and public == False:
+                    with open(os.path.join(self.path, type, private_key_name + '.pem'), 'r') as key_file:
 
-                        private_key = serialization.load_pem_private_key(
-                                    key_file.read(),
-                                    password = b'%b' % private_key_password.encode('utf-8'),
-                                    backend = default_backend())
-
-                        for lines in key_file:
-                            print(lines, end ='')
-
-                elif private== False and public == True:
-
-                    with open(os.path.join(self.path, type, public_key_name + '.pem')):
+                        # private_key = serialization.load_pem_private_key(
+                        #             key_file.read(),
+                        #             password = b'%b' % private_key_password.encode('utf-8'),
+                        #             backend = default_backend())
 
                         for lines in key_file:
-                            print(lines, end='')
+                            #print(lines, end ='')
+                            yield(lines)
+
+
+                elif private == False and public == True:
+
+                    with open(os.path.join(self.path, type, public_key_name + '.pem')) as key_file:
+
+                        for lines in key_file:
+                            #print(lines, end='')
+                            yield lines
+
                 else:
-                    raise ValueError("Either private is True and public is False")
+                    raise ValueError("ValueError: Boolean Values. private variable and public variable must not have the same Boolean values.")
             else:
                 raise FileNotFoundError("Entered key path does not exist")
 
@@ -493,6 +498,11 @@ type_3 = 'development'
 
 print(volt_1.pass_match(type_2, 'apexsingularitymim01', private_key_name = 'private_key', public_key_name = 'public_key'))
 
+f = volt_1.view_keys(private_key_name = 'private_key',
+            public_key_name = 'public_key', private=True, public=False)
+
+for i in f:
+    print(i, end='')
 #-------- end of test field 1
 
 
