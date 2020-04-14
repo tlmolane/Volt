@@ -61,11 +61,13 @@ class Volt:
                 else:
                     # print('gets here')
                     return (False, private_key_path, public_key_path)
+            else:
+                raise FileNotFoundError
 
         except Exception as e:
             # print('gets here')
-            print(e)
-            return (False, None)
+            #print(e)
+            return (False, e)
 
     def dict_exist(self, type, dict_name):
 
@@ -149,6 +151,7 @@ class Volt:
             if self.keys_exist(type, private_key_name, public_key_name)[0] == True:
 
                 try:
+
                     with open(os.path.join(self.path, type, private_key_name + '.pem'), 'rb') as key_file:
                         private_key = serialization.load_pem_private_key(
                                     key_file.read(),
@@ -160,8 +163,8 @@ class Volt:
 
                     return True
                 except ValueError as e:
-                    print(e)
-                    return False
+                    #print(e)
+                    return (False, e)
             else:
                 raise FileNotFoundError("[INFO]: File {} does not exist".format(os.path.join(self.path, type, private_key_name + '.pem')))
         except Exception as e:
@@ -205,13 +208,33 @@ class Volt:
                     # print(decrypted_dictionary)
                     return decrypted_dictionary
                 except FileNotFoundError as e:
+                    #print(e()
+                    return (False, e)
+
+                except ValueError as e:
                     print(e)
-                    return False
+
+                    with open(os.path.join(self.path, type, private_key_name + '.pem'), 'rb') as key_file:
+                        private_key = serialization.load_pem_private_key(
+                                    key_file.read(),
+                                    password = None,
+                                    backend = default_backend()
+                                    )
+                        decrypted = private_key.decrypt(accounts_byte, padding.OAEP(
+                                            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                                            algorithm=hashes.SHA256(),
+                                            label=None
+                                            )
+                                    )
+                        decrypted_dictionary = json.loads(decrypted.decode('utf-8'))
+
+                    return decrypted_dictionary
+
             else:
                 raise FileNotFoundError("[INFO]: File {} does not exist".format(os.path.join(self.path, type, private_key_name + '.pem')))
         except Exception as e:
-            print(e)
-            return False
+            #print(e)
+            return (False, e)
 
 
     def create_keys(self, save_path, type, private_key_name = 'private_key', public_key_name = 'public_key', pickle_file='passwords.pickle', ext = '.pem', privatekey_password = None, encryption = False, replace = False, pb_exp = 65537, ky_size = 4096):
@@ -321,6 +344,39 @@ class Volt:
             key_file.close()
 
             print("[INFO] new dictionary has been encrypted \n use corresponding private key to decrypt" )
+        except Exception as e:
+            print(e)
+
+    def view_keys(self, private_key_password, private_key_name = 'private_key', public_key_name = 'public_key', private=False, Public = True):
+        try:
+            private_key_name = public_key_name.split('.')[0]
+            public_key_name = public_key_name.split('.')[0]
+
+
+            if self.keys_exist(type, private_key_name, public_key_name)[0]:
+
+                if private == True and  public == False:
+                    with open(os.path.join(self.path, type, private_key_name + '.pem')) as key_file:
+
+                        private_key = serialization.load_pem_private_key(
+                                    key_file.read(),
+                                    password = b'%b' % private_key_password.encode('utf-8'),
+                                    backend = default_backend())
+
+                        for lines in key_file:
+                            print(lines, end ='')
+
+                elif private== False and public == True:
+
+                    with open(os.path.join(self.path, type, public_key_name + '.pem')):
+
+                        for lines in key_file:
+                            print(lines, end='')
+                else:
+                    raise ValueError("Either private is True and public is False")
+            else:
+                raise FileNotFoundError("Entered key path does not exist")
+
         except Exception as e:
             print(e)
 
