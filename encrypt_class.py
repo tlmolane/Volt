@@ -173,8 +173,10 @@ class Volt:
             #return False
 
 
-    def decrypt(self, type, privatekey_password,  dict_name, private_key_name = 'private_key',
+    def decrypt(self, type, private_key_password,  dict_name, private_key_name = 'private_key',
                         public_key_name = 'public_key'):
+
+
         try:
 
             if self.keys_exist(type, private_key_name, public_key_name)[0] == True and self.dict_exist(type, dict_name)[0] == True:
@@ -188,10 +190,15 @@ class Volt:
 
                 try:
 
+                    if private_key_password != None or private_key_password != '':
+                        private_key_password = b'%b' % private_key_password.encode('utf-8')
+                    else:
+                        private_key_password = None
+
                     with open(os.path.join(self.path, type, private_key_name + '.pem'), 'rb') as key_file:
                         private_key = serialization.load_pem_private_key(
                                     key_file.read(),
-                                    password = b'%b' % privatekey_password.encode('utf-8'),
+                                    password = private_key_password,
                                     backend = default_backend()
                         )
 
@@ -211,25 +218,6 @@ class Volt:
                 except FileNotFoundError as e:
                     #print(e()
                     return (False, e)
-
-                except ValueError as e:
-                    print(e)
-
-                    with open(os.path.join(self.path, type, private_key_name + '.pem'), 'rb') as key_file:
-                        private_key = serialization.load_pem_private_key(
-                                    key_file.read(),
-                                    password = None,
-                                    backend = default_backend()
-                                    )
-                        decrypted = private_key.decrypt(accounts_byte, padding.OAEP(
-                                            mgf=padding.MGF1(algorithm=hashes.SHA256()),
-                                            algorithm=hashes.SHA256(),
-                                            label=None
-                                            )
-                                    )
-                        decrypted_dictionary = json.loads(decrypted.decode('utf-8'))
-
-                    return decrypted_dictionary
 
             else:
                 raise FileNotFoundError("[INFO]: File {} does not exist".format(os.path.join(self.path, type, private_key_name + '.pem')))
@@ -494,22 +482,29 @@ type_3 = 'development'
 #print(volt_1.keys_exist(type = type))
 #print(volt_1.dict_exist(type = type, dict_name = 'passwords.pickle'))
 
-# pass match test:
+# ----- pass match test:
+# end of pass match test.
 
-print(volt_1.pass_match(type_2, 'apexsingularitymim01', private_key_name = 'private_key', public_key_name = 'public_key'))
+# view key test
+# f = volt_1.view_keys(private_key_name = 'private_key',
+#             public_key_name = 'public_key', private=True, public=False)
+#
+# for i in f:
+#     print(i, end='')
 
-f = volt_1.view_keys(private_key_name = 'private_key',
-            public_key_name = 'public_key', private=True, public=False)
+# end of view key_test
 
-for i in f:
-    print(i, end='')
+# decrypt test:
+
+d = volt_1.decrypt(type, private_key_password = 'test',  dict_name = 'passwords.pickle', private_key_name = 'private_key',
+                    public_key_name = 'public_key')
+print(d)
 #-------- end of test field 1
 
 
 
 #print(volt_2.volt_exists())
 #creating key
-# volt_1.create_keys(volt_1.path, type, privatekey_password='apexsingularitymim01', encryption=True, replace=True)
 #
 # print(volt_1.create_volt('personal'))
 
