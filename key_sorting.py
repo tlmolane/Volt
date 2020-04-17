@@ -66,7 +66,7 @@ def new_key_names(private_key_name, public_key_name, directory, path_pattern='_%
 def missing_key_check():
     pass
 
-pri, pub = new_key_names('private_key', 'public_key', '/home/zeefu/Documents/Volt/tshepo_molane/development', ext = '.pem')
-
-print(pri.split('/')[-1],
-      pub.split('/')[-1])
+# pri, pub = new_key_names('private_key', 'public_key', '/home/zeefu/Documents/Volt/tshepo_molane/development', ext = '.pem')
+#
+# print(pri.split('/')[-1],
+#       pub.split('/')[-1])
