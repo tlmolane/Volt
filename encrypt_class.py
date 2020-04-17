@@ -3,6 +3,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
+import key_sorting
 import argparse
 import getpass
 import logging
@@ -51,12 +52,14 @@ class Volt:
             public_key_name, private_key_name = public_key_name.split('.')[0], private_key_name.split('.')[0]
 
             if self.type_exists(type)[0] == True:
+                # print(self.type_exists(type))
                 # print('gets here first')
 
                 private_key_path = os.path.join(self.path, type, private_key_name + '.pem')
                 public_key_path  = os.path.join(self.path, type, public_key_name + '.pem')
-
+                #print(private_key_path, public_key_path)
                 if os.path.exists(private_key_path) and os.path.exists(public_key_path):
+                    #print('gets here')
                     return (True,private_key_path, public_key_path)
                 else:
                     # print('gets here')
@@ -87,7 +90,8 @@ class Volt:
             print(e)
             return False
 
-    def encrypt(self, type, decrypted_dict, password, account, dict_name = 'passwords.pickle', public_key_name = 'public_key'):
+    def encrypt(self, type, decrypted_dict, password, account, dict_name = 'passwords.pickle',
+                public_key_name = 'public_key'):
         # decrypted_dict is a returned object from the function decrypt()
         try:
             dict_name = dict_name.split('.')[0]
@@ -176,7 +180,6 @@ class Volt:
     def decrypt(self, type, private_key_password,  dict_name, private_key_name = 'private_key',
                         public_key_name = 'public_key'):
 
-
         try:
 
             if self.keys_exist(type, private_key_name, public_key_name)[0] == True and self.dict_exist(type, dict_name)[0] == True:
@@ -225,22 +228,59 @@ class Volt:
             #print(e)
             return (False, e)
 
+    @staticmethod
+    def createKeys():
 
-    def create_keys(self, save_path, type, private_key_name = 'private_key', public_key_name = 'public_key', pickle_file='passwords.pickle', ext = '.pem', privatekey_password = None, encryption = False, replace = False, pb_exp = 65537, ky_size = 4096):
+        pass
 
-        private_key_name = private_key_name + ext
-        public_key_name  = public_key_name  + ext
+    def create_keys(self, type, private_key_name = 'private_key', public_key_name = 'public_key',
+                    pickle_file='passwords.pickle', ext = '.pem', save_path = 'default',
+                    private_key_password = None, encryption = False, replace = False,
+                    pb_exp = 65537, ky_size = 4096):
+
 
         try:
-            if replace != False:
-                print("[INFO] deleting existing keys...")
-                os.remove(os.path.join(self.path, type, private_key_name))
-                os.remove(os.path.join(self.path, type, public_key_name))
+            if replace != False and save_path == 'default':
+
+                try:
+                    private_key_name = private_key_name.split('.')[0] + ext
+                    public_key_name  = public_key_name.split('.')[0]  + ext
+
+                    print("[INFO] deleting existing keys...")
+                    os.remove(os.path.join(self.path, type, private_key_name))
+                    os.remove(os.path.join(self.path, type, public_key_name))
+
+                    save_path = os.path.join(self.path, type)
+
+                except FileNotFoundError:
+                    print(e)
+                    print("[INFO] creating new keys in default path")
+                    save_path = os.path.join(self.path, type)
+                    pass
+
+            elif replace == False and save_path == 'default':
+
+                try:
+                    private_key_name = private_key_name.split('.')[0]
+                    public_key_name  = public_key_name.split('.')[0]
+
+                    print("[INFO] saving keys in {}".format(os.path.join(self.path, type)))
+                    save_path = os.path.join(self.path, type)
+                    pri, pub = key_sorting.new_key_names(
+                                                        private_key_name,
+                                                        public_key_name,
+                                                        os.path.join(self.path,type),
+                                                        ext
+                                                        )
+                    private_key_name, public_key_name = pri.split('/')[-1],
+                                                        pub.split('/')[-1] 
             else:
-                raise FileNotFoundError('keys do not exist')
-        except Exception as e:
+
+
+        except ValueError:
             print(e)
-            pass
+
+        #print('gets here')
 
         try:
 
@@ -257,13 +297,20 @@ class Volt:
 
                 public_key = private_key.public_key()
 
-                if encryption == True and private_key_password == None:
+
+                if encryption == True and (private_key_password == None or private_key_password == ''):
                     raise Exception("private key password cannot be None")
-                if encryption == False and privatekey_password !=None:
-                    raise Exception("serialization with encryption is False but password is provided")
+                if encryption == False and (private_key_password !=None and private_key_password !=''):
+
+                    print("[INFO] Warning: serialization with encryption is False but password was provided or is None. serialzing with encryption...")
+                    serialize = serialization.BestAvailableEncryption(b'%b' % private_key_password.encode('utf-8'))
+
+
+
+                #print('gets here')
 
                 if encryption == True and private_key_password != None:
-                    serialize = serialization.BestAvailableEncryption(b'%b' % privatekey_password.encode('utf-8'))
+                    serialize = serialization.BestAvailableEncryption(b'%b' % private_key_password.encode('utf-8'))
                 else:
                     serialize = serialization.NoEncryption()
 
@@ -284,13 +331,15 @@ class Volt:
 
 
 
-                with open(os.path.join(save_path, type,  private_key_name), 'wb') as f:
+                with open(os.path.join(save_path, private_key_name), 'wb') as f:
                     f.write(pem)
                 f.close()
 
-                with open(os.path.join(save_path, type, public_key_name), 'wb') as f:
+                with open(os.path.join(save_path, public_key_name), 'wb') as f:
                     f.write(pem_2)
                 f.close()
+                #print(save_path)
+                print("[INFO]: public key {} and private key {} saved in {}".format(public_key_name, private_key_name, save_path))
 
 
                 return
@@ -496,11 +545,13 @@ type_3 = 'development'
 
 # decrypt test:
 
-d = volt_1.decrypt(type, private_key_password = 'test',  dict_name = 'passwords.pickle', private_key_name = 'private_key',
-                    public_key_name = 'public_key')
-print(d)
+# d = volt_1.decrypt(type, private_key_password = 'test',  dict_name = 'passwords.pickle', private_key_name = 'private_key',
+#                     public_key_name = 'public_key')
+# print(d)
 #-------- end of test field 1
 
+
+volt_1.create_keys(type='development', private_key_name = 'private_key', public_key_name = 'public_key', pickle_file='passwords.pickle', ext = '.pem', save_path = 'default',private_key_password = None, encryption = False, replace = False, pb_exp = 65537, ky_size = 4096)
 
 
 #print(volt_2.volt_exists())
