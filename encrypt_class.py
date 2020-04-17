@@ -272,10 +272,14 @@ class Volt:
                                                         os.path.join(self.path,type),
                                                         ext
                                                         )
-                    private_key_name, public_key_name = pri.split('/')[-1],
-                                                        pub.split('/')[-1] 
-            else:
 
+                    private_key_name, public_key_name = pri.split('/')[-1],
+                                                        pub.split('/')[-1]
+                except FileNotFoundError:
+                    raise FileNotFoundError("FileNotFoundError exception thrown")
+            else:
+                print("ValueError: save_path must be default")
+                raise ValueError
 
         except ValueError:
             print(e)
@@ -298,21 +302,24 @@ class Volt:
                 public_key = private_key.public_key()
 
 
-                if encryption == True and (private_key_password == None or private_key_password == ''):
-                    raise Exception("private key password cannot be None")
-                if encryption == False and (private_key_password !=None and private_key_password !=''):
+                if encryption == True and (private_key_password == None or len(private_key_password) == 0):
+                    raise ValueError("ValueError: encryption option is true but private key password was not provided")
+                elif encryption == False and (private_key_password !=None and len(private_key_password) != 0):
 
-                    print("[INFO] Warning: serialization with encryption is False but password was provided or is None. serialzing with encryption...")
+                    print("[INFO] Warning: serialization with encryption is False but password was provided. serialzing with encryption...")
                     serialize = serialization.BestAvailableEncryption(b'%b' % private_key_password.encode('utf-8'))
 
 
-
-                #print('gets here')
-
-                if encryption == True and private_key_password != None:
+                elif encryption == True and (private_key_password != None and len(private_key_name) != 0):
                     serialize = serialization.BestAvailableEncryption(b'%b' % private_key_password.encode('utf-8'))
-                else:
+                elif encryption == False and (private_key_password == None or len(private_key_password) == 0):
                     serialize = serialization.NoEncryption()
+
+                else:
+                    print("[INFO] Warning: serializing private key with no encryption")
+                    serialize = serialization.NoEncryption()
+
+
 
 
                 "Private Key"
