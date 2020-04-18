@@ -29,7 +29,7 @@ class Volt:
         #self.type_path = os.path.join(self.path, )
 
     @property
-    def fullname(self):
+    def full_name(self):
         return '{} {}'.format(self.first, self.last)
 
     def volt_exists(self):
@@ -234,13 +234,14 @@ class Volt:
         pass
 
     def create_keys(self, type, private_key_name = 'private_key', public_key_name = 'public_key',
-                    pickle_file='passwords.pickle', ext = '.pem', save_path = 'default',
-                    private_key_password = None, encryption = False, replace = False,
-                    pb_exp = 65537, ky_size = 4096):
+                    pickle_file='passwords.pickle', ext = '.pem', private_key_password = None,
+                    encryption = False, replace = False, pb_exp = 65537, ky_size = 4096):
 
 
         try:
-            if replace != False and save_path == 'default':
+            save_path = os.path.join(self.path, type)
+
+            if replace != False:
 
                 try:
                     private_key_name = private_key_name.split('.')[0] + ext
@@ -250,33 +251,40 @@ class Volt:
                     os.remove(os.path.join(self.path, type, private_key_name))
                     os.remove(os.path.join(self.path, type, public_key_name))
 
-                    save_path = os.path.join(self.path, type)
+                    # save_path = os.path.join(self.path, type)
 
                 except FileNotFoundError:
-                    print(e)
-                    print("[INFO] creating new keys in default path")
-                    save_path = os.path.join(self.path, type)
+                    print("[INFO] creating new keys in path {}".format(save_path))
+                    #save_path = os.path.join(self.path, type)
                     pass
 
-            elif replace == False and save_path == 'default':
+            elif replace == False and self.keys_exist(type, private_key_name, public_key_name)[0] == True:
 
                 try:
                     private_key_name = private_key_name.split('.')[0]
                     public_key_name  = public_key_name.split('.')[0]
 
                     print("[INFO] saving keys in {}".format(os.path.join(self.path, type)))
-                    save_path = os.path.join(self.path, type)
-                    pri, pub = key_sorting.new_key_names(
-                                                        private_key_name,
+                    #save_path = os.path.join(self.path, type)
+                    pri, pub = key_sorting.new_key_names(private_key_name,
                                                         public_key_name,
-                                                        os.path.join(self.path,type),
-                                                        ext
+                                                        save_path,
+                                                        path_pattern='_%s',
+                                                        ext = ext
                                                         )
 
-                    private_key_name, public_key_name = pri.split('/')[-1],
-                                                        pub.split('/')[-1]
+                    private_key_name, public_key_name = pri.split('/')[-1], pub.split('/')[-1]
+
                 except FileNotFoundError:
                     raise FileNotFoundError("FileNotFoundError exception thrown")
+
+            elif replace == False and self.keys_exist(type, private_key_name, public_key_name)[0] == False:
+                print(self.keys_exist(private_key_name, public_key_name)[0])
+
+                private_key_name = private_key_name.split('.')[0] + ext
+                public_key_name  = public_key_name.split('.')[0]  + ext
+                # save_path = os.path.join(self.path, type)
+                pass
             else:
                 print("ValueError: save_path must be default")
                 raise ValueError
@@ -288,72 +296,81 @@ class Volt:
 
         try:
 
-            print("[INFO]: Creating Keys...")
+            print("[INFO]: creating keys...")
 
-            if self.volt_exists() == True and self.type_exists(type)[0] == True:
+            type_trigger = True
 
-                private_key = rsa.generate_private_key(
-                                public_exponent = pb_exp,
-                                key_size = ky_size,
-                                backend = default_backend()
+            while type_trigger:
+                if self.volt_exists() == True and self.type_exists(type)[0] == True:
 
-                )
+                    private_key = rsa.generate_private_key(
+                                    public_exponent = pb_exp,
+                                    key_size = ky_size,
+                                    backend = default_backend()
 
-                public_key = private_key.public_key()
-
-
-                if encryption == True and (private_key_password == None or len(private_key_password) == 0):
-                    raise ValueError("ValueError: encryption option is true but private key password was not provided")
-                elif encryption == False and (private_key_password !=None and len(private_key_password) != 0):
-
-                    print("[INFO] Warning: serialization with encryption is False but password was provided. serialzing with encryption...")
-                    serialize = serialization.BestAvailableEncryption(b'%b' % private_key_password.encode('utf-8'))
-
-
-                elif encryption == True and (private_key_password != None and len(private_key_name) != 0):
-                    serialize = serialization.BestAvailableEncryption(b'%b' % private_key_password.encode('utf-8'))
-                elif encryption == False and (private_key_password == None or len(private_key_password) == 0):
-                    serialize = serialization.NoEncryption()
-
-                else:
-                    print("[INFO] Warning: serializing private key with no encryption")
-                    serialize = serialization.NoEncryption()
-
-
-
-
-                "Private Key"
-                pem = private_key.private_bytes(
-                                encoding = serialization.Encoding.PEM,
-                                format = serialization.PrivateFormat.PKCS8,
-                                #encryption_algorithm = serialization.BestAvailableEncryption(b'test')
-                                encryption_algorithm=serialize)
-
-
-                "Public key"
-                pem_2 = public_key.public_bytes(
-                                encoding = serialization.Encoding.PEM,
-                                format = serialization.PublicFormat.SubjectPublicKeyInfo
                     )
 
+                    public_key = private_key.public_key()
 
 
-                with open(os.path.join(save_path, private_key_name), 'wb') as f:
-                    f.write(pem)
-                f.close()
+                    if encryption == True and (private_key_password == None or len(private_key_password) == 0):
+                        raise ValueError("ValueError: encryption option is true but private key password was not provided")
+                    elif encryption == False and (private_key_password !=None and len(private_key_password) != 0):
 
-                with open(os.path.join(save_path, public_key_name), 'wb') as f:
-                    f.write(pem_2)
-                f.close()
-                #print(save_path)
-                print("[INFO]: public key {} and private key {} saved in {}".format(public_key_name, private_key_name, save_path))
+                        print("[INFO] Warning: serialization with encryption is False but password was provided. serialzing with encryption...")
+                        serialize = serialization.BestAvailableEncryption(b'%b' % private_key_password.encode('utf-8'))
 
 
-                return
+                    elif encryption == True and (private_key_password != None and len(private_key_name) != 0):
+                        serialize = serialization.BestAvailableEncryption(b'%b' % private_key_password.encode('utf-8'))
+                    elif encryption == False and (private_key_password == None or len(private_key_password) == 0):
+                        serialize = serialization.NoEncryption()
 
-            else:
-                raise FileNotFoundError("[INFO]: File {} does not exist".format(os.path.join(self.path, type)))
-                return None
+                    else:
+                        print("[INFO] Warning: serializing private key with no encryption")
+                        serialize = serialization.NoEncryption()
+
+
+
+
+                    "Private Key"
+                    pem = private_key.private_bytes(
+                                    encoding = serialization.Encoding.PEM,
+                                    format = serialization.PrivateFormat.PKCS8,
+                                    #encryption_algorithm = serialization.BestAvailableEncryption(b'test')
+                                    encryption_algorithm=serialize)
+
+
+                    "Public key"
+                    pem_2 = public_key.public_bytes(
+                                    encoding = serialization.Encoding.PEM,
+                                    format = serialization.PublicFormat.SubjectPublicKeyInfo
+                        )
+
+
+
+                    with open(os.path.join(save_path, private_key_name), 'wb') as f:
+                        f.write(pem)
+                    f.close()
+
+                    with open(os.path.join(save_path, public_key_name), 'wb') as f:
+                        f.write(pem_2)
+                    f.close()
+                    #print(save_path)
+                    print("[INFO]: keys created. public key {} and private key {} saved in {}".format(public_key_name, private_key_name, save_path))
+
+                    type_trigger = False
+
+
+                    #return
+                elif self.volt_exists() == True and self.type_exists(type)[0] == False:
+
+                    print("[INFO]: volt type {} does not exist".format(type))
+                    print("[INFO]: creating volt type '{}''")
+                    self.create_volt_type(type)
+
+                else:
+                    raise FileNotFoundError("[INFO]: Volt {} does not exist".format(os.path.join(self.path)))
 
 
         except Exception as e:
@@ -362,11 +379,36 @@ class Volt:
 
         try:
 
+            try:
+                if replace == True and self.dict_exist(type, pickle_file)[0] == True:
+                    print("[INFO] deleting existing dictionary...")
+                    os.remove(os.path.join(self.path, type, pickle_file))
+                elif replace == True and self.dict_exist(type, pickle_file)[0] == False:
+                    print('FileNotFoundError: dictionary/file  not found. Proceeding to creating dict pickle file...')
+                    pass
+                elif replace == False and self.dict_exist(type, pickle_file)[0] == True:
+                    new_pickle_file_path = key_sorting.new_file_name('passwords.pickle',
+                                                                    save_path,
+                                                                    path_pattern='_%s',
+                                                                    ext = '.pickle')
+                    pickle_file = new_pickle_file_path.split('/')[-1]
+                elif replace == False and self.dict_exist(type, pickle_file)[0] == False:
+                    pass
+                else:
+                    raise ValueError("ValueError: dict_name variable must be set to True if replace is variable is set to True or it must be False")
+
+            except Exception as e:
+                print(e)
+                return
+
+
+
+
             accounts = {}
             accounts_str = json.dumps(accounts)
             accounts_byte = accounts_str.encode('utf-8')
 
-            with open(os.path.join(self.path, type, private_key_name), 'rb') as key_file:
+            with open(os.path.join(self.path, type, public_key_name), 'rb') as key_file:
                 public_key = serialization.load_pem_public_key(
                             key_file.read(),
                             backend = default_backend()
@@ -388,7 +430,7 @@ class Volt:
             f.close()
             key_file.close()
 
-            print("[INFO] new dictionary has been encrypted \n use corresponding private key to decrypt" )
+            print("[INFO] new dictionary in {} has been encrypted. use corresponding private key to decrypt".format(pickle_file))
         except Exception as e:
             print(e)
 
@@ -527,7 +569,7 @@ save_path = volt_2.path
 type = "social"
 type_2 = "social"
 type_3 = 'development'
-# print(volt_1.fullname)
+# print(volt_1.full_name)
 # print(volt_1.path)
 #print(volt_1.create_volt('development'))
 #volt_2.create_volt_profile()
@@ -557,8 +599,16 @@ type_3 = 'development'
 # print(d)
 #-------- end of test field 1
 
-
-volt_1.create_keys(type='development', private_key_name = 'private_key', public_key_name = 'public_key', pickle_file='passwords.pickle', ext = '.pem', save_path = 'default',private_key_password = None, encryption = False, replace = False, pb_exp = 65537, ky_size = 4096)
+#volt_1.create_volt_type(type="social")
+volt_1.create_keys(type='social',
+                    private_key_name = 'private_key',
+                    public_key_name = 'public_key',
+                    pickle_file='passwords.pickle', ext = '.pem',
+                    private_key_password = None,
+                    encryption = False,
+                    replace = False,
+                    pb_exp = 65537,
+                    ky_size = 4096)
 
 
 #print(volt_2.volt_exists())
