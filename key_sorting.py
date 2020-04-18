@@ -25,6 +25,8 @@ def new_key_names(private_key_name, public_key_name, directory, path_pattern='_%
     path_pattern_1 = os.path.join(directory, private_key_name + path_pattern + '.' + ext)
     path_pattern_2 = os.path.join(directory, public_key_name + path_pattern +'.' + ext)
 
+
+
     two_patterns.append(path_pattern_1)
     two_patterns.append(path_pattern_2)
 
@@ -42,7 +44,9 @@ def new_key_names(private_key_name, public_key_name, directory, path_pattern='_%
     """
     for path_pat in two_patterns:
 
+
         i = 1
+        print(path_pat % 2)
 
         # First do an exponential search
         while os.path.exists(path_pat % i):
@@ -66,7 +70,33 @@ def new_key_names(private_key_name, public_key_name, directory, path_pattern='_%
 def missing_key_check():
     pass
 
-# pri, pub = new_key_names('private_key', 'public_key', '/home/zeefu/Documents/Volt/tshepo_molane/development', ext = '.pem')
-#
+def new_file_name(file_name, directory, path_pattern='_%s', ext='pickle'):
+    file_name = file_name.split('.')[0]
+    ext = ext.split('.')[-1]
+
+    path_pattern = os.path.join(directory, file_name + path_pattern + '.' + ext)
+
+
+    i = 1
+
+    # First do an exponential search
+    while os.path.exists(path_pattern % i):
+        i = i*2
+
+    # Result lies somewhere in the interval (i/2..i]
+    # We call this interval (a..b] and narrow it down until a + 1 = b
+    a, b = (i // 2, i)
+    while a + 1 < b:
+        c = (a + b) // 2 # interval midpoint
+        a, b = (c, b) if os.path.exists(path_pattern % c) else (a, c)
+
+
+    return path_pattern % b
+
+# private_key_name = 'private_key'
+# public_key_name = 'public_key_name'
+# path = os.path.join('home', 'zeefu', 'Documents', 'Volt', 'tshepo_molane', 'development')
+# print(new_file_name('passwords.pickle',path, path_pattern='_%s', ext = '.pickle'))
+
 # print(pri.split('/')[-1],
 #       pub.split('/')[-1])
