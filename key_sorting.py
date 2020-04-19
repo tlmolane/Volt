@@ -46,7 +46,7 @@ def new_key_names(private_key_name, public_key_name, directory, path_pattern='_%
 
 
         i = 1
-        print(path_pat % 2)
+        #print(path_pat % 2)
 
         # First do an exponential search
         while os.path.exists(path_pat % i):
