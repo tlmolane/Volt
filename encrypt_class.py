@@ -229,9 +229,115 @@ class Volt:
             return (False, e)
 
     @staticmethod
-    def createKeys():
+    def createKeys(private_key_name, public_key_name, save_path, ext ='.pem', private_key_password=None,
+                    encryption = False, replace = False, pb_exp = 65537, ky_size = 4096):
+        try:
 
-        pass
+            if replace != False and os.path.exists(os.path.join(save_path, private_key_name)):
+                private_key_name = private_key_name.split('.')[0] + ext
+                public_key_name  = public_key_name.split('.')[0]  + ext
+
+
+            elif replace == False and os.path.exists(os.path.join(save_path, private_key_name)) == True:
+
+                try:
+                    private_key_name = private_key_name.split('.')[0]
+                    public_key_name  = public_key_name.split('.')[0]
+
+
+                    print("[INFO] saving keys in {}".format(os.path.join(save_path)))
+                    #save_path = os.path.join(self.path, type)
+                    pri, pub = key_sorting.new_key_names(private_key_name,
+                                                        public_key_name,
+                                                        save_path,
+                                                        path_pattern='_%s',
+                                                        ext = ext
+                                                        )
+
+
+                    private_key_name, public_key_name = pri.split('/')[-1], pub.split('/')[-1]
+
+                except FileNotFoundError:
+                    raise FileNotFoundError("FileNotFoundError exception thrown. Check if save_path exists")
+
+            elif replace == False and os.path.exists(os.path.join(save_path, private_key_name)) == False:
+                private_key_name = private_key_name.split('.')[0] + ext
+                public_key_name  = public_key_name.split('.')[0]  + ext
+
+
+        except FileNotFoundError:
+            raise FileNotFoundError("FileNotFoundError exception thrown. Check if save_path exists")
+
+        try:
+
+            print("[INFO]: creating keys...")
+
+            if os.path.exists(os.path.join(save_path)):
+
+                private_key = rsa.generate_private_key(
+                                public_exponent = pb_exp,
+                                key_size = ky_size,
+                                backend = default_backend()
+
+                )
+
+                public_key = private_key.public_key()
+
+
+                if encryption == True and (private_key_password == None or len(private_key_password) == 0):
+                    raise ValueError("ValueError: encryption option is true but private key password was not provided")
+                elif encryption == False and (private_key_password !=None and len(private_key_password) != 0):
+
+                    print("[INFO] Warning: serialization with encryption is False but password was provided. serialzing with encryption...")
+                    serialize = serialization.BestAvailableEncryption(b'%b' % private_key_password.encode('utf-8'))
+
+
+                elif encryption == True and (private_key_password != None and len(private_key_name) != 0):
+                    serialize = serialization.BestAvailableEncryption(b'%b' % private_key_password.encode('utf-8'))
+                elif encryption == False and (private_key_password == None or len(private_key_password) == 0):
+                    serialize = serialization.NoEncryption()
+
+                else:
+                    print("[INFO] Warning: serializing private key with no encryption")
+                    serialize = serialization.NoEncryption()
+
+                "Private Key"
+                pem = private_key.private_bytes(
+                                encoding = serialization.Encoding.PEM,
+                                format = serialization.PrivateFormat.PKCS8,
+                                #encryption_algorithm = serialization.BestAvailableEncryption(b'test')
+                                encryption_algorithm=serialize)
+
+
+                "Public key"
+                pem_2 = public_key.public_bytes(
+                                encoding = serialization.Encoding.PEM,
+                                format = serialization.PublicFormat.SubjectPublicKeyInfo
+                    )
+
+
+
+                with open(os.path.join(save_path, private_key_name), 'wb') as f:
+                    f.write(pem)
+                f.close()
+
+                with open(os.path.join(save_path, public_key_name), 'wb') as f:
+                    f.write(pem_2)
+                f.close()
+                #print(save_path)
+                print("[INFO]: keys created. public key {} and private key {} saved in {}".format(public_key_name, private_key_name, save_path))
+
+
+
+            else:
+                raise FileNotFoundError("[INFO]: Volt {} does not exist".format(os.path.join(save_path)))
+
+
+        except Exception as e:
+            print(e)
+            return None
+
+        return
 
     def create_keys(self, type, private_key_name = 'private_key', public_key_name = 'public_key',
                     pickle_file='passwords.pickle', ext = '.pem', private_key_password = None,
@@ -569,6 +675,8 @@ save_path = volt_2.path
 type = "social"
 type_2 = "social"
 type_3 = 'development'
+
+
 # print(volt_1.full_name)
 # print(volt_1.path)
 #print(volt_1.create_volt('development'))
@@ -598,17 +706,42 @@ type_3 = 'development'
 #                     public_key_name = 'public_key')
 # print(d)
 #-------- end of test field 1
+# test field 2
 
 #volt_1.create_volt_type(type="social")
-volt_1.create_keys(type='social',
-                    private_key_name = 'private_key',
-                    public_key_name = 'public_key',
-                    pickle_file='passwords.pickle', ext = '.pem',
-                    private_key_password = None,
-                    encryption = False,
-                    replace = False,
-                    pb_exp = 65537,
-                    ky_size = 4096)
+# volt_1.create_keys(type='social',
+#                     private_key_name = 'private_key',
+#                     public_key_name = 'public_key',
+#                     pickle_file='passwords.pickle', ext = '.pem',
+#                     private_key_password = None,
+#                     encryption = False,
+#                     replace = False,
+#                     pb_exp = 65537,
+#                     ky_size = 4096)
+# lines = volt_1.view_keys(private_key_name = 'private_key.pem', public_key_name = 'public_key.pem', private=False, public= True)
+#
+# for line in lines:
+#     print(line, end = '')
+# end of test field 2
+
+
+# test field 3
+# private_key_name = 'private_key.pem'
+# public_key_name = 'public_key.pem'
+# save_path = '/home/zeefu/Desktop/test_folder/'
+# Volt.createKeys(private_key_name,
+#                 public_key_name,
+#                 save_path,
+#                 ext ='.pem',
+#                 private_key_password='test',
+#                 encryption = True,
+#                 replace = False,
+#                 pb_exp = 65537,
+#                 ky_size = 4096)
+# end of test field 3
+
+
+
 
 
 #print(volt_2.volt_exists())
