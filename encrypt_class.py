@@ -13,6 +13,11 @@ import json
 import sys
 import os
 
+"""
+Author: Tshepo L. Molane
+Git: ZeefuApx
+email: tmolane@gmail.com
+"""
 class Volt:
 
     abs_path = os.path.dirname(os.path.abspath(__file__))
@@ -103,9 +108,9 @@ class Volt:
 
                 if account not in list(accounts.keys()):
                     print('[INFO] specified account does not exist. \n[INFO] Adding {} account to dictionary'.format(account))
-                    accounts[account] = str(password)
+                    accounts[account] = (str(password), 'hash')
 
-                accounts[account] = str(password) # change password of existing account on dict before encrypting
+                accounts[account] = (str(password), 'hash') # change password of existing account on dict before encrypting
 
                 accounts_str = json.dumps(accounts)
                 accounts_byte = accounts_str.encode('utf-8')
@@ -177,7 +182,7 @@ class Volt:
             #return False
 
 
-    def decrypt(self, type, private_key_password,  dict_name, private_key_name = 'private_key',
+    def decrypt(self, type, private_key_password, dict_name, private_key_name = 'private_key',
                         public_key_name = 'public_key'):
 
         try:
@@ -193,10 +198,16 @@ class Volt:
 
                 try:
 
-                    if private_key_password != None or private_key_password != '':
-                        private_key_password = b'%b' % private_key_password.encode('utf-8')
-                    else:
+                    if private_key_password == None:
+                        # print("gets here 1")
                         private_key_password = None
+                    elif len(private_key_password) != 0:
+                        # print("gets here 2")
+                        private_key_password = b'%b' % private_key_password.encode('utf-8')
+                    elif len(private_key_password) == 0:
+                        # print("gets here 3")
+                        private_key_password = None
+
 
                     with open(os.path.join(self.path, type, private_key_name + '.pem'), 'rb') as key_file:
                         private_key = serialization.load_pem_private_key(
@@ -233,12 +244,13 @@ class Volt:
                     encryption = False, replace = False, pb_exp = 65537, ky_size = 4096):
         try:
 
+
             if replace != False and os.path.exists(os.path.join(save_path, private_key_name)):
                 private_key_name = private_key_name.split('.')[0] + ext
                 public_key_name  = public_key_name.split('.')[0]  + ext
 
 
-            elif replace == False and os.path.exists(os.path.join(save_path, private_key_name)) == True:
+            elif replace == False and os.path.exists(os.path.join(save_path, private_key_name)):
 
                 try:
                     private_key_name = private_key_name.split('.')[0]
@@ -253,6 +265,7 @@ class Volt:
                                                         path_pattern='_%s',
                                                         ext = ext
                                                         )
+
 
 
                     private_key_name, public_key_name = pri.split('/')[-1], pub.split('/')[-1]
@@ -728,7 +741,7 @@ type_3 = 'development'
 # test field 3
 # private_key_name = 'private_key.pem'
 # public_key_name = 'public_key.pem'
-# save_path = '/home/zeefu/Desktop/test_folder/'
+# save_path = '/home/zeefu/Desktop/'
 # Volt.createKeys(private_key_name,
 #                 public_key_name,
 #                 save_path,
@@ -740,6 +753,19 @@ type_3 = 'development'
 #                 ky_size = 4096)
 # end of test field 3
 
+p = volt_1.decrypt(type='social',
+            private_key_password = '',
+            dict_name='passwords.pickle',
+            private_key_name = 'private_key',
+            public_key_name = 'public_key')
+
+print(p['test_account'])
+# e = volt_1.encrypt(type = 'social',
+#             decrypted_dict = p,
+#             password = 'test_password',
+#             account = 'test_account',
+#             dict_name = 'passwords.pickle',
+#             public_key_name = 'public_key')
 
 
 
