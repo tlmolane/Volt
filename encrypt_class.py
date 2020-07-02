@@ -4,6 +4,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 import key_sorting
+import password_hex
 import argparse
 import getpass
 import logging
@@ -12,6 +13,7 @@ import shutil
 import json
 import sys
 import os
+import re
 
 """
 Author: Tshepo L. Molane
@@ -23,6 +25,11 @@ class Volt:
     abs_path = os.path.dirname(os.path.abspath(__file__))
 
     account_types = ["social", "development", "personal", "other"]
+    files_dict = {'image': ['jpg', 'PNG', 'png', 'JPG', 'jpeg', 'JPEG', 'gif'],
+                'video': ['avi', 'mpeg', 'mkv', 'mp4', 'MP4'],
+                'document': ['', 'PDF', 'pdf', 'txt', 'xlsx', 'docx', 'odt'],
+                'file': ['zip', 'tar', 'pickle', 'pub'],
+                'script': [ 'py', 'java', '']}
 
     def __init__(self, first, last):
 
@@ -96,11 +103,14 @@ class Volt:
             return False
 
     def encrypt(self, type, decrypted_dict, password, account, dict_name = 'passwords.pickle',
-                public_key_name = 'public_key'):
+                public_key_name = 'public_key', max_length=10):
         # decrypted_dict is a returned object from the function decrypt()
         try:
             dict_name = dict_name.split('.')[0]
             public_key_name = public_key_name.split('.')[0]
+
+            final_password, final_password_hex_only, sha_3_hexdigest = password_hex.generate_hex_pass(str(password), max_length)
+
 
             if self.dict_exist(type, dict_name)[0] == True:
                 accounts = decrypted_dict
@@ -108,9 +118,9 @@ class Volt:
 
                 if account not in list(accounts.keys()):
                     print('[INFO] specified account does not exist. \n[INFO] Adding {} account to dictionary'.format(account))
-                    accounts[account] = (str(password), 'hash')
+                    accounts[account] = (str(password), final_password, final_password_hex_only, sha_3_hexdigest)
 
-                accounts[account] = (str(password), 'hash') # change password of existing account on dict before encrypting
+                accounts[account] = (str(password), final_password, final_password_hex_only, sha_3_hexdigest) # change password of existing account on dict before encrypting
 
                 accounts_str = json.dumps(accounts)
                 accounts_byte = accounts_str.encode('utf-8')
@@ -279,7 +289,7 @@ class Volt:
 
 
         except FileNotFoundError:
-            raise FileNotFoundError("FileNotFoundError exception thrown. Check if save_path exists")
+            raise FileNotFoundError("FileNotFoundError exception. Check if save_path exists")
 
         try:
 
@@ -351,6 +361,85 @@ class Volt:
             return None
 
         return
+
+    @staticmethod
+    def encrypt_file_content(public_key_path, full_file_path, save_path,
+                             fernet_key_path=True, replace=False, file_type='document'):
+        try:
+
+            if not (os.path.exists(public_key_path) and os.path.exists(full_file_path)):
+                raise FileNotFoundError
+
+            #print("gets here 2")
+
+
+            file_name_ext = full_file_path.split('/')[-1]
+
+            if file_name_ext.count('.') == 1:
+                file_name, ext = file_name_ext.split('.')
+            elif file_name_ext.count('.') > 1:
+                ext = file_name_ext.split('.')[-1]
+                file_name = re.sub(r'.{}$'.format(ext), '', file_name_ext)
+            else:
+                ext = ''
+                file_name = file_name_ext.split('.')[-1]
+
+
+            if ext not in Volt.files_dict[file_type]:
+                raise Exception("[Custom Exception]: File type extention not found in Volt.file_dict class variable")
+
+            with open(public_key_path, 'rb') as key_file:
+                public_key = serialization.load_pem_public_key(
+                            key_file.read(),
+                            backend = default_backend()
+
+                        )
+
+            if replace != True:
+                new_file_name = key_sorting.new_file_name(file_name, save_path, path_pattern='_%s', ext=ext)
+                print("gets here", full_file_path)
+
+                with open(full_file_path, 'rb+') as file:
+                    data = file.read()
+
+                with open(os.path.join(save_path, new_file_name), 'wb+') as new_file:
+                    new_file.seek(0)
+
+                    encrypted = public_key.encrypt(
+                                data,
+                                padding.OAEP(
+                                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                                algorithm = hashes.SHA256(),
+                                label=None
+                            )
+                    )
+
+                    # you can append hmac here
+                    new_file.write(encrypted)
+                    new_file.truncate()
+
+            else:
+                with open(os.path.join(full_file_path), 'rb+') as file:
+                    data = file.read()
+                    file.seek(0)
+
+                    encrypted = public_key.encrypt(
+                                data,
+                                padding.OAEP(
+                                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                                algorithm = hashes.SHA256(),
+                                label=None
+                            )
+                    )
+                    # you can append hmac here
+                    file.write(encrypted)
+                    file.truncate()
+
+
+                return True, file_name, ext
+
+        except Exception as e:
+            return e
 
     def create_keys(self, type, private_key_name = 'private_key', public_key_name = 'public_key',
                     pickle_file='passwords.pickle', ext = '.pem', private_key_password = None,
@@ -759,17 +848,22 @@ p = volt_1.decrypt(type='social',
             private_key_name = 'private_key',
             public_key_name = 'public_key')
 
-print(p['test_account'])
-# e = volt_1.encrypt(type = 'social',
-#             decrypted_dict = p,
-#             password = 'test_password',
-#             account = 'test_account',
-#             dict_name = 'passwords.pickle',
-#             public_key_name = 'public_key')
+print(p)
+e = volt_1.encrypt(type = 'social',
+            decrypted_dict = p,
+            password = 'test_',
+            account = 'test_account',
+            dict_name = 'passwords.pickle',
+            public_key_name = 'public_key')
 
 
 
 
+# print(Volt.files_dict['document
+test_func = Volt.encrypt_file_content('/home/zeefu/Desktop/public_key.pem', '/home/zeefu/Desktop/crypto_stuff.txt', '/home/zeefu/Desktop/',
+                             hash_sig=True, replace=False, file_type='document')
+
+print(test_func)
 #print(volt_2.volt_exists())
 #creating key
 #

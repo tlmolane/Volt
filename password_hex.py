@@ -18,7 +18,7 @@ def generate_hex_pass(password_string, max_length=10):
         final_password = ''.join(hash_slice + alpha +char_select)
         final_password_hex_only = sha_3_hexdigest[0:max_length + 2]
 
-        return (final_password, final_password_hex_only, sha_3_hexdigest )
+        return (final_password, final_password_hex_only, sha_3_hexdigest)
 
     except Exception as e:
         print(e)

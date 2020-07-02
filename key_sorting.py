@@ -71,10 +71,16 @@ def missing_key_check():
     pass
 
 def new_file_name(file_name, directory, path_pattern='_%s', ext='pickle'):
-    file_name = file_name.split('.')[0]
+
     ext = ext.split('.')[-1]
 
-    path_pattern = os.path.join(directory, file_name + path_pattern + '.' + ext)
+    if len(ext) != 0:
+        ext =  '.' + ext
+
+    file_name = file_name.split('.')[0]
+
+
+    path_pattern = os.path.join(directory, file_name + path_pattern + ext)
 
 
     i = 1
