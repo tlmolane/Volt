@@ -101,8 +101,8 @@ def new_file_name(file_name, directory, path_pattern='_%s', ext='pickle'):
 
 # private_key_name = 'private_key'
 # public_key_name = 'public_key_name'
-# path = os.path.join('home', 'zeefu', 'Documents', 'Volt', 'tshepo_molane', 'development')
-# print(new_file_name('passwords.pickle',path, path_pattern='_%s', ext = '.pickle'))
+#path = os.path.join('home', 'zeefu', 'Documents', 'Volt', 'tshepo_molane', 'development')
+#print(new_file_name('fernet.key',path, path_pattern='_%s', ext = 'key'))
 
 # print(pri.split('/')[-1],
 #       pub.split('/')[-1])
