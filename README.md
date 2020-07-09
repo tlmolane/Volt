@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Project Title
 
 This project's name is called Volt. It is a program that creates a private key and public key to encypt and decrypt a file that contains an object (dictionary)  
@@ -85,3 +86,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Hat tip to anyone whose code was used
 * Inspiration
 * etc
+=======
+# Volt
+>>>>>>> 95737e387ec31937325741da0626af230620b22b
