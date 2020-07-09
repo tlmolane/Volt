@@ -1,7 +1,7 @@
 <<<<<<< HEAD
 # Project Title
 
-This project's name is called Volt. It is a program that creates a private key and public key to encypt and decrypt a file that contains an object (dictionary)  
+This ongoing project's name is called Volt. It is a simple program that creates a private key and public key to encypt and decrypt a file that contains an object (dictionary). The encrypt_file.py Volt class containts static methods that allow one to encrypt a file (.txt, .py, .docx, .odt etc ) using pem private/public keys and fernet keys.  
 
 ## Getting Started
 
