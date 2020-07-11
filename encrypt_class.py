@@ -433,14 +433,14 @@ class Volt:
         try:
 
             if fernet_key_encrypt:
-                print('[INFO]: encrypting using fernet key {}'.format(public_key_path))
+                print('[INFO] encrypting using fernet key {}'.format(public_key_path))
                 #public_key_path = fernet_key_encrypt[1]
             else:
-                print('[INFO]: encrypting using public key {}'.format(public_key_path))
+                print('[INFO] encrypting using public key {}'.format(public_key_path))
 
 
             if not (os.path.exists(public_key_path) and os.path.exists(full_file_path)):
-                raise FileNotFoundError
+                raise FileNotFoundError("[INFO] FileNotFoundError: {} or {} does not exist".format(public_key_path, full_file_path))
 
             file_name_ext = full_file_path.split('/')[-1]
 
@@ -458,6 +458,7 @@ class Volt:
                 raise Exception("[Custom Exception]: File type extention not found in Volt.file_dict class variable")
 
             with open(public_key_path, 'rb') as key_file:
+                print(public_key_path)
 
                 if not fernet_key_encrypt:
                     public_key = serialization.load_pem_public_key(
@@ -706,8 +707,7 @@ class Volt:
                 # save_path = os.path.join(self.path, type)
                 pass
             else:
-                print("ValueError: save_path must be default")
-                raise ValueError
+                raise ValueError("[INFO]: ValueError; save_path must be default")
 
         except ValueError:
             print(e)
@@ -1090,21 +1090,22 @@ class Volt:
 #
 public_key_path = '/home/zeefu/Desktop/public_key.pem'
 private_key_path = '/home/zeefu/Desktop/private_key.pem'
-full_file_path = '/home/zeefu/Desktop/fernet_test.key'
+full_file_path = '/home/zeefu/Desktop/github-recovery-codes.txt'
+fernet_key_path = '/home/zeefu/Desktop/fernet.key'
 save_path = '/home/zeefu/Desktop/'
-# Volt.encrypt_file_content(public_key_path,
-#                     full_file_path,
-#                     save_path,
-#                     fernet_key_encrypt=False,
-#                     replace=True,
-#                     file_type='file')
+Volt.encrypt_file_content(fernet_key_path,
+                    full_file_path,
+                    save_path,
+                    fernet_key_encrypt=True,
+                    replace=False,
+                    file_type='document')
 
-Volt.decrypt_file_content(private_key_path,
-                        private_key_password='',
-                        encrypted_file_path=full_file_path,
-                        save_path=save_path,
-                        fernet_key_decrypt=False,
-                        replace=True,
-                        file_type='file')
+# Volt.decrypt_file_content(private_key_path,
+#                         private_key_password='',
+#                         encrypted_file_path=fernet_key_path,
+#                         save_path=save_path,
+#                         fernet_key_decrypt=False,
+#                         replace=True,
+#                         file_type='file')
 
 # -----------------------------------------------------------end of test_field 4
