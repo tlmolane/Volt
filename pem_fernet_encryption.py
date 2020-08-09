@@ -41,7 +41,6 @@ def main(args):
                 else:
                     # print("password is correct or not needed")
                     try:
-
                         Volt.decrypt_file_content(args.private_key,
                                                 private_key_password,
                                                 args.file_path,
@@ -95,6 +94,9 @@ def main(args):
                 pass
 
             pass
+        
+        if args.encrypt_dir:
+
 
     except Exception as e:
         raise
@@ -188,6 +190,9 @@ def parse_arguments(argv):
         help ='file_path full path')
     parser.add_argument('-s','--save_path', required=False, default='/home/zeefu/Desktop',
         help ='save path')
+    parser.add_argument('-a', 'dir_path',required=False, 
+        help='directory of files to encrypt')
+
 
     # file type. see print Volt.files_dict to see dictionary
     parser.add_argument('-t','--file_type', required=False, default='document',
