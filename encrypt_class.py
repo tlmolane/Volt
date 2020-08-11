@@ -34,6 +34,9 @@ class Volt:
                 'document': ['', 'PDF', 'pdf', 'txt', 'xlsx', 'docx', 'odt'],
                 'file': ['zip', 'tar', 'pickle', 'pub', 'key'],
                 'script': [ 'py', 'java', 'key', '']}
+                
+    all_files = list(set([y for x in list(files_dict.values()) for y in x]))
+
 
     def __init__(self, first, last):
 
