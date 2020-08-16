@@ -14,7 +14,11 @@ import re
 
 #print(Volt.files_dict)
 
-
+def load_file_paths(folder):
+    file_paths = []
+    for filename in os.listdir(folder):
+        file_paths.append(os.path.join(path,filename))
+    return file_paths
 
 def main(args):
     try:
@@ -95,7 +99,22 @@ def main(args):
 
             pass
         
-        if args.encrypt_dir:
+        if args.encrypt_dir and (args.all or args.ext):
+            if not os.path.exists(args.dir_path):
+                raise FileNotFoundError("{} path does not exist".format(args.dir_path))
+            
+            try:
+                if args.all:
+                    for extention in 
+
+                
+            except expression as identifier:
+                pass
+
+            
+            
+
+
 
 
     except Exception as e:
@@ -190,7 +209,7 @@ def parse_arguments(argv):
         help ='file_path full path')
     parser.add_argument('-s','--save_path', required=False, default='/home/zeefu/Desktop',
         help ='save path')
-    parser.add_argument('-a', 'dir_path',required=False, 
+    parser.add_argument('-a', '--dir_path',required=False, 
         help='directory of files to encrypt')
 
 
