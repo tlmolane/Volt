@@ -36,6 +36,7 @@ class Volt:
                 'script': [ 'py', 'java', 'key', '']}
                 
     all_files = list(set([y for x in list(files_dict.values()) for y in x]))
+    all_types = list(set([y for x in list(files_dict.keys()) for y in x]))
 
 
     def __init__(self, first, last):
@@ -432,7 +433,7 @@ class Volt:
     def encrypt_file_content(public_key_path, full_file_path, save_path,
                              fernet_key_encrypt=False, replace=False,
                              file_type='document'):
-
+                             
         try:
 
             if fernet_key_encrypt:
