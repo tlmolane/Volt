@@ -646,8 +646,6 @@ class Volt:
 
                 elif replace:
 
-                    # os.remove(encrypted_file_path)
-
                     with open(encrypted_file_path, 'wb') as file:
                         file.truncate(0)
                         file.write(decrypted_data)
@@ -657,6 +655,23 @@ class Volt:
 
         except Exception as e:
             print(e)
+
+
+    @staticmethod
+    def extention(path_to_file):
+        return path_to_file.split('/')[-1].split('.')[-1]
+
+    @staticmethod
+    def type_list(dictionary, type_,folder_path):
+        try:
+            path_list = []
+            for r, d, f in os.walk(folder_path):
+                for file in f:
+                    if Volt.extention(os.path.abspath(file)) in dictionary[type_]:
+                        path_list.append(os.path.join(r, file))
+            return path_list
+        except Exception as e:
+            pass 
 
     def create_keys(self, type, private_key_name = 'private_key', public_key_name = 'public_key',
                     pickle_file='passwords.pickle', ext = '.pem', private_key_password = None,
@@ -690,7 +705,6 @@ class Volt:
                     public_key_name  = public_key_name.split('.')[0]
 
                     print("[INFO] saving keys in {}".format(os.path.join(self.path, type)))
-                    #save_path = os.path.join(self.path, type)
                     pri, pub = key_sorting.new_key_names(private_key_name,
                                                         public_key_name,
                                                         save_path,
@@ -708,7 +722,6 @@ class Volt:
 
                 private_key_name = private_key_name.split('.')[0] + ext
                 public_key_name  = public_key_name.split('.')[0]  + ext
-                # save_path = os.path.join(self.path, type)
                 pass
             else:
                 raise ValueError("[INFO]: ValueError; save_path must be default")
@@ -716,7 +729,6 @@ class Volt:
         except ValueError:
             print(e)
 
-        #print('gets here')
 
         try:
 
@@ -761,7 +773,6 @@ class Volt:
                     pem = private_key.private_bytes(
                                     encoding = serialization.Encoding.PEM,
                                     format = serialization.PrivateFormat.PKCS8,
-                                    #encryption_algorithm = serialization.BestAvailableEncryption(b'test')
                                     encryption_algorithm=serialize)
 
 
@@ -780,13 +791,10 @@ class Volt:
                     with open(os.path.join(save_path, public_key_name), 'wb') as f:
                         f.write(pem_2)
                     f.close()
-                    #print(save_path)
                     print("[INFO]: keys created. public key {} and private key {} saved in {}".format(public_key_name, private_key_name, save_path))
 
                     type_trigger = False
 
-
-                    #return
                 elif self.volt_exists() == True and self.type_exists(type)[0] == False:
 
                     print("[INFO]: volt type {} does not exist".format(type))
@@ -869,13 +877,8 @@ class Volt:
                 if private == True and public == False:
                     with open(os.path.join(self.path, type, private_key_name + '.pem'), 'r') as key_file:
 
-                        # private_key = serialization.load_pem_private_key(
-                        #             key_file.read(),
-                        #             password = b'%b' % private_key_password.encode('utf-8'),
-                        #             backend = default_backend())
 
                         for lines in key_file:
-                            #print(lines, end ='')
                             yield(lines)
 
 
@@ -884,7 +887,6 @@ class Volt:
                     with open(os.path.join(self.path, type, public_key_name + '.pem')) as key_file:
 
                         for lines in key_file:
-                            #print(lines, end='')
                             yield lines
 
                 else:
@@ -901,7 +903,6 @@ class Volt:
         try:
             if self.volt_exists() == True  and type.lower() != 'default':
                 if type.lower() in Volt.account_types:
-                    #os.mkdir(self.path)
                     os.mkdir(os.path.join(self.path, type))
                     print("[INFO] Volt type '{}' created".format(type))
                     return
@@ -914,7 +915,6 @@ class Volt:
             elif self.volt_exists() == False:
                 if type.lower() == 'default':
                     os.mkdir(self.path)
-                    #os.mkdir(os.path.join(self.path))
                     print("[INFO] Volt type '{}' created".format(type))
                     return
         except FileExistsError:
@@ -925,7 +925,6 @@ class Volt:
 
         try:
             if self.volt_exists() == True:
-                    #os.mkdir(self.path)
                 shutil.rmtree(os.path.join(self.path, type))
                 print("[INFO] Volt type '{}' removed".format(type))
                 return
@@ -946,9 +945,6 @@ class Volt:
                 return "[INFO] Volt type '{}' created".format(type)
             else:
                 raise FileExistsError
-            #     os.mkdir(self.path)
-            #     os.mkdir(os.path.join(self.path, type))
-            #     return  "[INFO] Volt created under {}".format("other")
         except FileExistsError:
             print("[INFO] '{}' Volt for {} {} already exists".format(type, self.first, self.last))
             return
@@ -962,9 +958,6 @@ class Volt:
                 return "[INFO] Volt type '{}' removed".format(type)
             else:
                 raise FileNotFoundError
-            #     os.mkdir(self.path)
-            #     os.mkdir(os.path.join(self.path, type))
-            #     return  "[INFO] Volt created under {}".format("other")
         except FileNotFoundError:
             print("[INFO] '{}' Volt for {} {} does not exists".format(type, self.first, self.last))
             return None
@@ -1092,17 +1085,20 @@ class Volt:
 #                                     replace=False,
 #                                     file_type='document')
 #
-public_key_path = '/home/zeefu/Desktop/public_key.pem'
-private_key_path = '/home/zeefu/Desktop/private_key.pem'
-full_file_path = '/home/zeefu/Desktop/github-recovery-codes.txt'
-fernet_key_path = '/home/zeefu/Desktop/fernet.key'
-save_path = '/home/zeefu/Desktop/'
-Volt.encrypt_file_content(fernet_key_path,
-                    full_file_path,
-                    save_path,
-                    fernet_key_encrypt=True,
-                    replace=False,
-                    file_type='document')
+
+#----------------------------------------------------------------------------------
+# public_key_path = '/home/zeefu/Desktop/public_key.pem'
+# private_key_path = '/home/zeefu/Desktop/private_key.pem'
+# full_file_path = '/home/zeefu/Desktop/github-recovery-codes.txt'
+# fernet_key_path = '/home/zeefu/Desktop/fernet.key'
+# save_path = '/home/zeefu/Desktop/'
+# Volt.encrypt_file_content(fernet_key_path,
+#                     full_file_path,
+#                     save_path,
+#                     fernet_key_encrypt=True,
+#                     replace=False,
+#                     file_type='document')
+#--------------------------------------------------------------------------------------
 
 # Volt.decrypt_file_content(private_key_path,
 #                         private_key_password='',
@@ -1113,3 +1109,14 @@ Volt.encrypt_file_content(fernet_key_path,
 #                         file_type='file')
 
 # -----------------------------------------------------------end of test_field 4
+
+# -----------------------------------------------------------test field 5
+
+
+
+# print(Volt.files_dict)
+# print(Volt.type_list(Volt.files_dict, 'document','/home/zeefu/Desktop/'))
+
+# print(Volt.extention('/home/zeefu/Desktop/0_eLsEoykT1ImBEw_L_decrypted.jpg'))
+
+# -----------------------------------------------------end of test field 5
