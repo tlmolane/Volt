@@ -14,12 +14,6 @@ import re
 
 #print(Volt.files_dict)
 
-def load_file_paths(folder):
-    file_paths = []
-    for filename in os.listdir(folder):
-        file_paths.append(os.path.join(path,filename))
-    return file_paths
-
 def main(args):
     try:
         if args.decrypt and not args.encrypt:
@@ -103,9 +97,16 @@ def main(args):
             if not os.path.exists(args.dir_path):
                 raise FileNotFoundError("{} path does not exist".format(args.dir_path))
             
+            files = load_file_list(args.dir_path)
+            
             try:
                 if args.all:
-                    for extention in 
+                    for type_ in Volt.all_types:
+                        
+
+
+
+
 
                 
             except expression as identifier:
