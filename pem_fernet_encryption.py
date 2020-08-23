@@ -1,6 +1,7 @@
 from volt_encrypt import Volt
 import password_hex
 import key_sorting
+import traceback
 import argparse
 import getpass
 import logging
@@ -48,8 +49,7 @@ def main(args):
                                                 file_type=args.file_type
                                                 )
                     except Exception as e:
-                        logging.error(traceback.format_exc())
-
+                        logging.error(e, exc_info=True)
 
                     break
 
@@ -58,7 +58,7 @@ def main(args):
         if args.encrypt:
 
             if not os.path.exists(args.public_key):
-                raise FileNotFoundError("{} path does not exist".format(args.private_key))
+                raise FileNotFoundError("{} path does not exist".format(args.public_key))
 
             try:
 
@@ -87,34 +87,52 @@ def main(args):
                                 encrypt_fernet_key=args.encrypt_fernet_key)
 
             except Exception as e:
-                logging.error(traceback.format())
+                logging.error(e, exc_info=True)
             else:
                 pass
 
             pass
         
-        if args.encrypt_dir and (args.all or args.ext):
+        if args.encrypt_dir and (args.all or args.file_type):
+
             if not os.path.exists(args.dir_path):
                 raise FileNotFoundError("{} path does not exist".format(args.dir_path))
-            
-            files = load_file_list(args.dir_path)
-            
-            try:
-                if args.all:
+
+            if not os.path.exists(args.public_key):
+                raise FileNotFoundError("{} path does not exist".format(args.public_key))
+
+
+            if args.all:
+                try:
+                    set_ = []
                     for type_ in Volt.all_types:
-                        
+                        for file_path in list(set(Volt.type_list(Volt.files_dict, type_, args.dir_path))):
 
+                            if file_path[1] not in set_:
+                                Volt.encrypt_file_content(args.public_key,
+                                file_path[1],
+                                save_path=file_path[0],
+                                fernet_key_encryption=args.fernet_key_encryption,
+                                replace = args.replace,
+                                file_type=type_)
+                                set_.append(file_path[1])
 
+                except Exception as e:
+                    print(e)
+                    raise
 
-
-
-                
-            except expression as identifier:
-                pass
-
-            
-            
-
+            if args.file_type and (not args.all):
+                try:
+                    for file_path in Volt.type_list(Volt.files_dict, args.file_type, args.dir_path):
+                        Volt.encrypt_file_content(args.public_key,
+                        file_path[1],
+                        save_path=file_path[0],
+                        fernet_key_encryption=args.fernet_key_encryption,
+                        replace = args.replace,
+                        file_type=args.file_type)
+                except Exception as e:
+                    print(e)
+                    raise 
 
 
 
@@ -200,6 +218,8 @@ def parse_arguments(argv):
         help ='encrypt file')
     parser.add_argument('-d','--decrypt', required=False, action='store_true',
         help ='decrypt file')
+    parser.add_argument('--encrypt_dir', required=False, action='store_true',
+    help ='decrypt file')
 
     # key, file and save paths. Note, path to fernet can be used to as public key path
     parser.add_argument('-p','--private_key', required=False,
@@ -212,6 +232,8 @@ def parse_arguments(argv):
         help ='save path')
     parser.add_argument('-a', '--dir_path',required=False, 
         help='directory of files to encrypt')
+    parser.add_argument('--all',required=False, action='store_true',
+    help='encrypt all file types in given directory')
 
 
     # file type. see print Volt.files_dict to see dictionary
@@ -222,7 +244,7 @@ def parse_arguments(argv):
     parser.add_argument('-i','--replace', required=False, default=False, action='store_true',
         help ='replace encrypted or decrypted file/replace existing private or public key')
     parser.add_argument('-r','--no_replace', required=False, dest='replace', action='store_false',
-        help ='do not exisiting encrypted/decrypted file or existing private/public key')
+        help ='do not replace existing encrypted/decrypted file or existing private/public key')
 
     parser.add_argument('-j','--fernet_key_encryption', required=False, default=False, action='store_true',
         help ='encryption using fernet key')

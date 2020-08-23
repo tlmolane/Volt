@@ -36,7 +36,8 @@ class Volt:
                 'script': [ 'py', 'java', 'key', '']}
                 
     all_files = list(set([y for x in list(files_dict.values()) for y in x]))
-    all_types = list(set([y for x in list(files_dict.keys()) for y in x]))
+    all_types = [i for i in list(files_dict.keys())]
+
 
 
     def __init__(self, first, last):
@@ -668,7 +669,7 @@ class Volt:
             for r, d, f in os.walk(folder_path):
                 for file in f:
                     if Volt.extention(os.path.abspath(file)) in dictionary[type_]:
-                        path_list.append(os.path.join(r, file))
+                        path_list.append((r, (os.path.join(r, file))))
             return path_list
         except Exception as e:
             pass 
@@ -726,7 +727,7 @@ class Volt:
             else:
                 raise ValueError("[INFO]: ValueError; save_path must be default")
 
-        except ValueError:
+        except ValueError as e:
             print(e)
 
 
@@ -1120,3 +1121,5 @@ class Volt:
 # print(Volt.extention('/home/zeefu/Desktop/0_eLsEoykT1ImBEw_L_decrypted.jpg'))
 
 # -----------------------------------------------------end of test field 5
+
+# print(Volt.type_list(Volt.files_dict, 'document','/home/zeefu/Desktop/test/'))

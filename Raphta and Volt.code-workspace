@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../Raphta/Shuri-Device"
+		},
+		{
+			"path": "../Raphta/People-count"
+		},
+		{
+			"path": "../Raphta/Social-Distancing"
+		},
+		{
+			"path": "../Raphta/jetson-api-client"
+		}
+	],
+	"settings": {}
+}

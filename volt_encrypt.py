@@ -21,8 +21,8 @@ import re
 
 """
 Author: Tshepo L. Molane
-Git: ZeefuApx
-email: tmolane@gmail.com
+Git: tlmolane
+email: tlmolane@protonmail.com
 """
 
 
@@ -36,6 +36,9 @@ class Volt:
                 'document': ['', 'PDF', 'pdf', 'txt', 'xlsx', 'docx', 'odt'],
                 'file': ['zip', 'tar', 'pickle', 'pub', 'key'],
                 'script': [ 'py', 'java', 'key', '']}
+                
+    all_files = list(set([y for x in list(files_dict.values()) for y in x]))
+    all_types = [i for i in list(files_dict.keys())]
 
     def __init__(self, first, last):
 
@@ -599,7 +602,7 @@ class Volt:
                         # you can append hmac here
 
 
-        except Exception as e:
+        except Exception:
             return logging.error(traceback.format_exc())
 
     @staticmethod
@@ -653,7 +656,7 @@ class Volt:
 
                     key_file.close()
 
-                except ValueError as e:
+                except ValueError:
                     logging.error(traceback.format_exc())
 
                 try:
@@ -726,8 +729,24 @@ class Volt:
 
                     print('[INFO] {} decrypted. saved as {}'.format(encrypted_file_name, new_file_name))
 
-        except Exception as e:
+        except Exception :
             logging.error(traceback.format_exc())
+
+    @staticmethod
+    def extention(path_to_file):
+        return path_to_file.split('/')[-1].split('.')[-1]
+
+    @staticmethod
+    def type_list(dictionary, type_,folder_path):
+        try:
+            path_list = []
+            for r, d, f in os.walk(folder_path):
+                for file in f:
+                    if Volt.extention(os.path.abspath(file)) in dictionary[type_]:
+                        path_list.append((r, (os.path.join(r, file))))
+            return path_list
+        except Exception as e:
+            print(e) 
 
     def create_keys(self, type, private_key_name = 'private_key', public_key_name = 'public_key',
                     pickle_file='passwords.pickle', ext = '.pem', private_key_password = None,
@@ -784,7 +803,7 @@ class Volt:
             else:
                 raise ValueError("[INFO] ValueError; save_path must be default")
 
-        except ValueError:
+        except ValueError as e:
             print(e)
 
         #print('gets here')
