@@ -12,8 +12,6 @@ import sys
 import os
 import re
 
-#print(Volt.files_dict)
-
 
 
 def main(args):
@@ -99,76 +97,6 @@ def main(args):
     except Exception as e:
         raise
     return
-# def main(args):
-#     try:
-#
-#         if args.decrypt and not args.encrypt:
-#             print("decryption!")
-#
-#             number_of_attempts = 0
-#             max_attempts = 3
-#
-#             while number_of_attempts <= max_attempts:
-#                 private_key_password = getpass.getpass(prompt='Enter private key password: ')
-#
-#                 if pass_match(private_key_password) == False:
-#                     number_of_attempts += 1
-#                     print("[INFO] number of attempts left {}".format(max_attempts - number_of_attempts))
-#                     if number_of_attempts == 3:
-#                         print("[INFO] Max tries exceeded. Goodbye!")
-#                         break
-#                 else:
-#
-#                     while True:
-#
-#                         account = str(input('name of account: '))
-#                         #account_password = getpass.getpass(prompt='Enter your {} password: '.format(account)) #password
-#
-#                         confirmation = str(input('confirm details for {} ? (y/n) '.format(account)))
-#
-#                         if confirmation.lower().startswith('y'):
-#                             decrypted_dict = decrypt(privatekey_password = private_key_password)
-#                             pass_list = list(decrypted_dict[account])
-#                             password_len = len(decrypted_dict[account])
-#                             portion = int(round((1/3)*(password_len),0))
-#                             #print(portion)
-#
-#                             for i in range(0, portion):
-#
-#                                 pass_list[i] = '*'
-#                                 pass_list[-i] = '*'
-#
-#
-#                             print("".join(pass_list))
-#                             #print(decrypted_dict[account])
-#
-#                             #print(decrypted_dict[account])
-#                             break
-#                         elif confirmation.lower().startswith('n'):
-#                             continue
-#                         else:
-#                             print("[INFO] program terminating. Goodbye!")
-#                             break
-#
-#                     return
-#             return
-#
-#         if args.create:
-#             #variable = getpass.getpass(prompt='Enter private key password: ')
-#             create_dict()
-#             return
-#
-#         # if args.create_keys:
-#         #
-#         #     return
-#         else:
-#             print("Charlatan! what do you want!?")
-#         return
-#
-#     except Exception as e:
-#         print(e)
-#
-#
 
 def parse_arguments(argv):
 
