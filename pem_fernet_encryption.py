@@ -105,7 +105,7 @@ def main(args):
                         try:
                             set_ = []
                             for file_path in Volt.type_list(Volt.files_dict, args.file_type, args.dir_path):
-                                
+
                                 if file_path[1] not in set_:
 
                                     Volt.decrypt_file_content(args.private_key,
@@ -206,76 +206,8 @@ def main(args):
     except Exception as e:
         raise
     return
-# def main(args):
-#     try:
-#
-#         if args.decrypt and not args.encrypt:
-#             print("decryption!")
-#
-#             number_of_attempts = 0
-#             max_attempts = 3
-#
-#             while number_of_attempts <= max_attempts:
-#                 private_key_password = getpass.getpass(prompt='Enter private key password: ')
-#
-#                 if pass_match(private_key_password) == False:
-#                     number_of_attempts += 1
-#                     print("[INFO] number of attempts left {}".format(max_attempts - number_of_attempts))
-#                     if number_of_attempts == 3:
-#                         print("[INFO] Max tries exceeded. Goodbye!")
-#                         break
-#                 else:
-#
-#                     while True:
-#
-#                         account = str(input('name of account: '))
-#                         #account_password = getpass.getpass(prompt='Enter your {} password: '.format(account)) #password
-#
-#                         confirmation = str(input('confirm details for {} ? (y/n) '.format(account)))
-#
-#                         if confirmation.lower().startswith('y'):
-#                             decrypted_dict = decrypt(privatekey_password = private_key_password)
-#                             pass_list = list(decrypted_dict[account])
-#                             password_len = len(decrypted_dict[account])
-#                             portion = int(round((1/3)*(password_len),0))
-#                             #print(portion)
-#
-#                             for i in range(0, portion):
-#
-#                                 pass_list[i] = '*'
-#                                 pass_list[-i] = '*'
-#
-#
-#                             print("".join(pass_list))
-#                             #print(decrypted_dict[account])
-#
-#                             #print(decrypted_dict[account])
-#                             break
-#                         elif confirmation.lower().startswith('n'):
-#                             continue
-#                         else:
-#                             print("[INFO] program terminating. Goodbye!")
-#                             break
-#
-#                     return
-#             return
-#
-#         if args.create:
-#             #variable = getpass.getpass(prompt='Enter private key password: ')
-#             create_dict()
-#             return
-#
-#         # if args.create_keys:
-#         #
-#         #     return
-#         else:
-#             print("Charlatan! what do you want!?")
-#         return
-#
-#     except Exception as e:
-#         print(e)
-#
-#
+
+
 
 def parse_arguments(argv):
 
@@ -286,7 +218,9 @@ def parse_arguments(argv):
     parser.add_argument('-d','--decrypt', required=False, action='store_true',
         help ='decrypt file')
     parser.add_argument('--encrypt_dir', required=False, action='store_true',
-    help ='decrypt file')
+    help ='encrypt direcotry')
+    parser.add_argument('--decrypt_dir', required=False, action='store_true',
+    help = 'decrypt direcotry')
 
     # key, file and save paths. Note, path to fernet can be used to as public key path
     parser.add_argument('-p','--private_key', required=False,
