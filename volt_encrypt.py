@@ -644,7 +644,7 @@ class Volt:
                 elif len(private_key_password) == 0:
                     # print("gets here 3")
                     private_key_password = None
-
+                
                 try:
 
                     with open(private_key_path, 'rb') as key_file:
@@ -729,8 +729,9 @@ class Volt:
 
                     print('[INFO] {} decrypted. saved as {}'.format(encrypted_file_name, new_file_name))
 
-        except Exception :
+        except Exception as e:
             logging.error(traceback.format_exc())
+
 
     @staticmethod
     def extention(path_to_file):

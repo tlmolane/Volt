@@ -19,7 +19,8 @@ python pem_fernet_encryption.py --encrypt_dir --file_type document --public_key 
 
 python pem_fernet_encryption.py --encrypt_dir --all --public_key /home/zeefu/Desktop/My\ Keys/Non\ Encrypted\ Keys/fernet.key --dir_path /home/zeefu/Desktop/test/ --fernet_key_encryption --no_replace
 
-
+# decrypt all document types recursively 
+python pem_fernet_encryption.py --decrypt_dir --file_type document --private_key /home/zeefu/Desktop/My\ Keys/Non\ Encrypted\ Keys/fernet.key --dir_path /home/zeefu/Desktop/test/ --fernet_key_decryption --all
 
 
 

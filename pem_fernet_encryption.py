@@ -46,7 +46,7 @@ def main(args):
                                                 private_key_password,
                                                 args.file_path,
                                                 save_path = args.save_path,
-                                                fernet_key_decrypt=args.fernet_key_decrypt,
+                                                fernet_key_decrypt=args.fernet_key_decryption,
                                                 replace = args.replace,
                                                 file_type=args.file_type
                                                 )
@@ -57,70 +57,79 @@ def main(args):
         
         if args.decrypt_dir and (args.all or args.file_type):
 
+            number_of_attempts = 0
+            max_attempts = 3
+
             if not os.path.exists(args.private_key):
                 raise FileNotFoundError("{} path does not exist".format(args.public_key))
-        
-            while number_of_attempts <= max_attempts:
-                private_key_password = getpass.getpass(prompt='Enter private key password: ')
 
-                if Volt.private_key_password_match(args.private_key, private_key_password) == False:
-                    number_of_attempts += 1
-                    print("[INFO] incorrect password: number of attempts left {}".format(max_attempts - number_of_attempts))
-                    if number_of_attempts == 3:
-                        print("[INFO] max tries exceeded.")
+            if not args.fernet_key_decryption:
+
+                while number_of_attempts <= max_attempts:
+                    private_key_password = getpass.getpass(prompt='Enter private key password: ')
+
+                    if Volt.private_key_password_match(args.private_key, private_key_password) == False:
+                        number_of_attempts += 1
+                        print("[INFO] incorrect password: number of attempts left {}".format(max_attempts - number_of_attempts))
+                        if number_of_attempts == 3:
+                            print("[INFO] max tries exceeded.")
+                        return
+                    elif Volt.private_key_password_match(args.private_key, private_key_password) == None:
                         break
-                elif Volt.private_key_password_match(args.private_key, private_key_password) == None:
-                    break
+                    else:
+                        private_key_password = None 
+                        break
+            else:
+                private_key_password = None 
+                pass 
 
-                else:
-                
-                    if args.all:
+            if args.all:
 
-                        try:
-                            set_ = []
-                            for type_ in Volt.all_types:
-                                for file_path in list(set(Volt.type_list(Volt.files_dict, type_, args.dir_path))):
-                                    if file_path[1] not in set_:
+                try:
+                    set_ = []
+                    for type_ in Volt.all_types:
+                        for file_path in list(set(Volt.type_list(Volt.files_dict, type_, args.dir_path))):
+                            if file_path[1] not in set_:
 
-                                        """Changes between fernet key and private key depending on"""
-                                        """the truth value of args.fernet_key_decrypt. """
+                                """Changes between fernet key and private key depending on"""
+                                """the truth value of args.fernet_key_decrypt. """
 
-                                        Volt.decrypt_file_content(args.private_key,
-                                        private_key_password,
-                                        file_path[1],
-                                        save_path = file_path[0],
-                                        fernet_key_decrypt=args.fernet_key_decrypt,
-                                        replace = args.replace,
-                                        file_type=args.file_type
-                                        )
-                                        set_.append(file_path[1])
-                            break
+                                Volt.decrypt_file_content(args.private_key,
+                                private_key_password,
+                                file_path[1],
+                                save_path = file_path[0],
+                                fernet_key_decrypt=args.fernet_key_decryption,
+                                replace = args.replace,
+                                file_type=args.file_type
+                                )
+                                set_.append(file_path[1])
+                    
 
-                        except Exception as e:
-                            print(e)
-                            raise
+                except Exception as e:
+                    #print(e)
+                    raise
 
-                    if args.file_type and (not args.all):
+            if args.file_type and (not args.all):
 
-                        try:
-                            set_ = []
-                            for file_path in Volt.type_list(Volt.files_dict, args.file_type, args.dir_path):
+                try:
+                    set_ = []
+                    for file_path in Volt.type_list(Volt.files_dict, args.file_type, args.dir_path):
 
-                                if file_path[1] not in set_:
+                        if file_path[1] not in set_:
 
-                                    Volt.decrypt_file_content(args.private_key,
-                                    private_key_password,
-                                    file_path[1],
-                                    save_path = file_path[0],
-                                    fernet_key_decrypt=args.fernet_key_decrypt,
-                                    replace = args.replace,
-                                    file_type=args.file_type
-                                    )
-                                    set_.append(file_path[1])
+                            Volt.decrypt_file_content(args.private_key,
+                            private_key_password,
+                            file_path[1],
+                            save_path = file_path[0],
+                            fernet_key_decrypt=args.fernet_key_decryption,
+                            replace = args.replace,
+                            file_type=args.file_type
+                            )
+                            set_.append(file_path[1])
 
-                        except Exception as e:
-                            print(e)
-                            raise 
+                except Exception as e:
+                    print(e)
+                    raise 
 
         if args.encrypt:
 
