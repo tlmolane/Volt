@@ -16,6 +16,7 @@ pip install cryptography
 
 ## Main script files
 ### Volt class script
+This script cotains the Volt class which, for now, largely consists of static methods which encrypt and decrypt a set of file types using private, public and fernet keys. 
 ```
 volt_encrypt.py
 ```
