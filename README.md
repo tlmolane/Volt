@@ -14,12 +14,12 @@ Create and activate conda or virtualenv environment and pip install crptography 
 pip install cryptography
 ```
 
-### Main script files
-## Volt class script
+## Main script files
+### Volt class script
 ```
 volt_encrypt.py
 ```
-## Encryption script
+### Encryption script
 ```
 pem_fernet_encryption.py
 ```
