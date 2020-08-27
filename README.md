@@ -2,37 +2,28 @@
 
 This ongoing project's name is called Volt. It is a simple program that creates a private key and public key to encypt and decrypt a file that contains an object (dictionary). The encrypt_file.py Volt class containts static methods that allow one to encrypt a file (.txt, .py, .docx, .odt etc ) using pem private/public keys and fernet keys.  
 
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
 ### Prerequisites
 
-What things you need to install the software and how to install them
+Python 3.6
+cryptography 2.8 (Python)
+
+### Installation
+Create and activate conda or virtualenv environment and pip install crptography 2.8
 
 ```
-Give examples
+pip install cryptography
 ```
 
-### Installing
-
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
+### Main script files
+## Volt class script
 ```
-Give the example
+volt_encrypt.py
 ```
-
-And repeat
-
+## Encryption script
 ```
-until finished
+pem_fernet_encryption.py
 ```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
+### Usage
 
 Explain how to run the automated tests for this system
 
