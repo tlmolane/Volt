@@ -44,7 +44,7 @@ pem_fernet_encryption.py
 #### Create encrypted private key with, public key and a public key encrypted fernet key and keep existing keys.
 ``` $ python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/user/Desktop --encrypt_private_key --private_key_password 'apexsingularity01' --no_replace  --public_exponent 65537 --key_size 4096 --create_fernet_key --encrypt_fernet_key ```
 
-### Encrypt a document types in a directory recursively using a fernet key.
+#### Encrypt a document types in a directory recursively using a fernet key.
 ``` $ python pem_fernet_encryption.py --encrypt_dir --file_type document --public_key /home/zeefu/Desktop/My\ Keys/Non\ Encrypted\ Keys/fernet.key --dir_path /path/to/directory --fernet_key_encryption ```
 
 #### Encrypt all document types recursively using a fernet key. delete unencrypted file types.
