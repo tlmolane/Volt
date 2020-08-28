@@ -14,13 +14,16 @@ Create and activate conda or virtualenv environment and pip install crptography 
 pip install cryptography
 ```
 ## Important Details
+WARNING: Be sure to keep your public and fernet keys safe as losing these may result in loss of infromation. Store passwords for your encrypted private_key passwords some place you can remember and access.
+
+
 
 ## Main script files
 ### Volt class script
-This script cotains the Volt class which, for now, largely consists of static methods which encrypt and decrypt a set of file types using private, public and fernet keys. 
 ```
 volt_encrypt.py
 ```
+This script cotains the Volt class which, for now, largely consists of static methods which encrypt and decrypt a set of file types using private, public and fernet keys. 
 
 ### Main static methods
 ```volt_encrypt.createKeys```: creates private and public key pair with a fernet key as an optional key.  
@@ -32,6 +35,8 @@ volt_encrypt.py
 ```
 pem_fernet_encryption.py
 ```
+This script can be used to create encryption key pairs and encrypt or decrypt document file types.
+
 ### Examples of Use
 #### Creating Keys:
 
@@ -75,7 +80,10 @@ pem_fernet_encryption.py
 ##### Decrypt file of specified existing type in directory using fernet key 
 ```$ python pem_fernet_encryption.py --decrypt_dir --private_key /path/to/fernet.key --file_path /path/to/encrypted/file --fernet_key_decryption --file_type document --no_replace ```
 
-
+## Project status
+Slow development because of other commitments but would like to add new features:  
+- cloud storage of encrypted keys and documents using available APIs (Mega Cloud/ Google Drive)
+- Database for stored encrypted keys
 
 ## Versioning
 This is the first code base (version 1).
