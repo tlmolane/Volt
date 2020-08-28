@@ -1,6 +1,6 @@
 # Volt 
 
-This ongoing project's name is called Volt. It is a simple program that creates a private key and public key to encypt and decrypt a file that contains an object (dictionary). The encrypt_file.py Volt class containts static methods that allow one to encrypt a file (.txt, .py, .docx, .odt etc ) using pem private/public keys and fernet keys.  
+This ongoing project's name is called Volt which applies symmetric and asymmetric encryption. It is a simple program that creates a private key and public key to encypt and decrypt a file contents. The encrypt_file.py Volt class containts static methods that allow one to encrypt a file (.txt, .py, .docx, .odt etc ) using pem private/public keys and fernet keys.  
 
 ### Prerequisites
 
@@ -20,6 +20,11 @@ This script cotains the Volt class which, for now, largely consists of static me
 ```
 volt_encrypt.py
 ```
+### Static Methods
+volt_encrypt.createKeys: creates private and public key pair with a fernet key as an optional key.
+volt_encrypt.encrypt_file_content: encrypts file content using an existing public or fernet key. 
+volt_encrypt.decrypt_file_content: decrypts file content using an existing private key or fernet key. 
+volt_encrypt.private_key_password_match: for an encrypted .pem private key, this function takes in a password as a string and returns True if password is correct and False if it is not  
 ### Encryption script
 ```
 pem_fernet_encryption.py
