@@ -20,7 +20,7 @@ This script cotains the Volt class which, for now, largely consists of static me
 ```
 volt_encrypt.py
 ```
-### Main static Methods
+### Main static methods
 ```volt_encrypt.createKeys```: creates private and public key pair with a fernet key as an optional key.  
 ```volt_encrypt.encrypt_file_content```: encrypts file content using an existing public or fernet key.   
 ```volt_encrypt.decrypt_file_content```: decrypts file content using an existing private key or fernet key.   
@@ -30,9 +30,36 @@ volt_encrypt.py
 ```
 pem_fernet_encryption.py
 ```
-### Usage
+### Examples of Use
+#### Create private key, public key, unencrypted fernet key to specified path (set fern_key_encrypt to True to encrypt fernet key with public key)
+```$ python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/user/Desktop/ --encrypt_private_key False --replace False --public_exponent 65537 --key_size 4096 --create_fernet_key False --fernet_key_encrypt False ```
 
-Explain how to run the automated tests for this system
+#### Create unencrypted private key, public key and unencrypted fernet key to specified path
+``` $ python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/user/Desktop --bare_private_key --replace  --public_exponent 65537 --key_size 4096 --create_fernet_key --fernet_key_encryption ```
+
+#### Create encrypted private key with, public key and a public key encrypted fernet key
+```$ python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/user/Desktop --encrypt_private_key --private_key_password 'mypassword' --replace  --public_exponent 65537 --key_size 4096 --create_fernet_key --encrypt_fernet_key
+ ```
+
+#### Create encrypted private key with, public key and a public key encrypted fernet key and keep existing keys.
+``` $ python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/user/Desktop --encrypt_private_key --private_key_password 'apexsingularity01' --no_replace  --public_exponent 65537 --key_size 4096 --create_fernet_key --encrypt_fernet_key ```
+
+### Encrypt a document types in a directory recursively using a fernet key.
+``` $ python pem_fernet_encryption.py --encrypt_dir --file_type document --public_key /home/zeefu/Desktop/My\ Keys/Non\ Encrypted\ Keys/fernet.key --dir_path /path/to/directory --fernet_key_encryption ```
+
+#### Encrypt all document types recursively using a fernet key. delete unencrypted file types.
+```$ python pem_fernet_encryption.py --encrypt_dir --all --public_key /path/to/fernet.key --dir_path /home/zeefu/Desktop/test/ --fernet_key_encryption --no_replace
+ ```
+
+
+
+
+
+
+
+
+
+
 
 ### Break down into end to end tests
 
