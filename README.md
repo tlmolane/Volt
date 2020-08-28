@@ -4,7 +4,7 @@ This ongoing project's name is called Volt which applies symmetric and asymmetri
 
 ### Prerequisites
 
-Python 3.6
+Python 3.6  
 cryptography 2.8 (Python)
 
 ### Installation
@@ -13,6 +13,7 @@ Create and activate conda or virtualenv environment and pip install crptography 
 ```
 pip install cryptography
 ```
+## Important Details
 
 ## Main script files
 ### Volt class script
@@ -20,6 +21,7 @@ This script cotains the Volt class which, for now, largely consists of static me
 ```
 volt_encrypt.py
 ```
+
 ### Main static methods
 ```volt_encrypt.createKeys```: creates private and public key pair with a fernet key as an optional key.  
 ```volt_encrypt.encrypt_file_content```: encrypts file content using an existing public or fernet key.   
@@ -75,50 +77,11 @@ pem_fernet_encryption.py
 
 
 
-
-
-
-
-
-
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
 ## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
-
+This is the first code base (version 1).
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Tshepo L. Molane**
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
@@ -127,7 +90,4 @@ See also the list of [contributors](https://github.com/your/project/contributors
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* 
