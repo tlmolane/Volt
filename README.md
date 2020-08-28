@@ -20,11 +20,11 @@ This script cotains the Volt class which, for now, largely consists of static me
 ```
 volt_encrypt.py
 ```
-### Static Methods
+### Main static Methods
 ```volt_encrypt.createKeys```: creates private and public key pair with a fernet key as an optional key.  
 ```volt_encrypt.encrypt_file_content```: encrypts file content using an existing public or fernet key.   
 ```volt_encrypt.decrypt_file_content```: decrypts file content using an existing private key or fernet key.   
-volt_encrypt.private_key_password_match: for an encrypted .pem private key, this function takes in a password as a string and returns True if password is correct and False if it is not    
+```volt_encrypt.private_key_password_match```: for an encrypted .pem private key, this function takes in a password as a string and returns True if password is correct and False if it is not    
 ### Encryption script
 ```
 pem_fernet_encryption.py
