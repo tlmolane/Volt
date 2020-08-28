@@ -1,6 +1,6 @@
 # Volt 
 
-This ongoing project's name is called Volt which applies symmetric and asymmetric encryption. It is a simple program that creates a private key and public key to encypt and decrypt a file contents. The encrypt_file.py Volt class containts static methods that allow one to encrypt a file (.txt, .py, .docx, .odt etc ) using pem private/public keys and fernet keys.  
+This ongoing project's name is called Volt which applies symmetric and asymmetric encryption. It is a simple program that allows one to generate a private and public key using an RSA algorithm to encypt and decrypt file contents. The encrypt_file.py Volt class containts static methods that allow one to encrypt a file (.txt, .py, .docx, .odt etc ) using pem private/public keys and fernet keys.  
 
 ### Prerequisites
 
