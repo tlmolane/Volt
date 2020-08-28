@@ -38,8 +38,7 @@ pem_fernet_encryption.py
 ```$ python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/user/Desktop --bare_private_key --replace  --public_exponent 65537 --key_size 4096 --create_fernet_key --fernet_key_encryption ```
 
 #### Create encrypted private key with, public key and a public key encrypted fernet key
-```$ python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/user/Desktop --encrypt_private_key --private_key_password 'mypassword' --replace  --public_exponent 65537 --key_size 4096 --create_fernet_key --encrypt_fernet_key
- ```
+```$ python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/user/Desktop --encrypt_private_key --private_key_password 'mypassword' --replace  --public_exponent 65537 --key_size 4096 --create_fernet_key --encrypt_fernet_key ```
 
 #### Create encrypted private key with, public key and a public key encrypted fernet key and keep existing keys.
 ``` $ python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/user/Desktop --encrypt_private_key --private_key_password 'apexsingularity01' --no_replace  --public_exponent 65537 --key_size 4096 --create_fernet_key --encrypt_fernet_key ```
