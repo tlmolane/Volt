@@ -8,13 +8,16 @@ Python 3.6
 cryptography 2.8 (Python)
 
 ### Installation
-Create and activate conda or virtualenv environment and pip install crptography 2.8
+Create and activate conda or virtualenv environment and pip install cryptography 2.8
 
 ```
 pip install cryptography
 ```
 ## Important Details
 WARNING: Be sure to keep your public and fernet keys safe as losing these may result in loss of infromation. Store passwords for your encrypted private_key passwords some place you can remember and access.
+
+### On using generated asymmetric keys (.pem private and private keys) 
+Since it is an RSA algorithm that is used to generate these asymmetric keys, one is limited to 256 bytes of plaintext data to encrypt (at most). To encrypt longer plaintexts,  the solution is to increase the key size (max value being 4096, see script arguments). If the plaintext data is too long, first encrypting the plaintext data using a fernet key (symmetric encryption) followed by encrypting the same fernet key using a public key (asymmetric key encryption) is a viable solution.  
 
 
 
