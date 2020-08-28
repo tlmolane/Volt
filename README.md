@@ -38,7 +38,7 @@ This script cotains the Volt class which, for now, largely consists of static me
 ```
 pem_fernet_encryption.py
 ```
-This script can be used to create encryption key pairs and encrypt or decrypt document file types.
+This script can be used to create encryption key pairs and to encrypt or decrypt document file types.
 
 ### Examples of Use
 #### Creating Keys:
