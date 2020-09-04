@@ -13,8 +13,6 @@ import sys
 import os
 import re
 
-#print(Volt.files_dict)
-
 def main(args):
 
     try:
@@ -209,7 +207,6 @@ def main(args):
                 except Exception as e:
                     print(e)
                     raise 
-
 
 
     except Exception as e:

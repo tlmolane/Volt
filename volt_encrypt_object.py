@@ -43,11 +43,12 @@ class Volt:
     def __init__(self, full_file_path):
 
         self.full_file_path = full_file_path
-        self.path = 
+        self.file = full_file_path.split('/')[-1]
+        self.root = '/'.join(full_file_path.split('/')[:-1])
+        self.file_extention = self.file.split('.')[-1] 
 
-    @property
-    def full_name(self):
-        return '{} {}'.format(self.first, self.last)
+    def __repr__(self):
+        return "Volt('{}').".format(self.full_file_path)
 
 
     @staticmethod
@@ -541,7 +542,11 @@ class Volt:
             print(e) 
 
 
+class Volt_dir(Volt):
 
+    def __init__(self, full_file_path):
+        super().__init__(full_file_path)
+        self.extention = ''
 
 #-------------------------------------------------------------------test field 1
 # volt_1 = Volt('Tshepo', 'Molane')
@@ -671,3 +676,9 @@ class Volt:
 #                         file_type='file')
 
 # -----------------------------------------------------------end of test_field 4
+
+file_test = Volt_dir('/home/zeefu/Desktop/test/')
+file_test = Volt('/home/zeefu/Desktop/test/')
+
+
+print(file_test.full_file_path)
