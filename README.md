@@ -44,16 +44,16 @@ This script can be used to create encryption key pairs and to encrypt or decrypt
 #### Creating Keys:
 
 ##### Create private key, public key, unencrypted fernet key to specified path (fern_key_encrypt is True by default)
-```$ python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/user/Desktop/ --encrypt_private_key False --replace False --public_exponent 65537 --key_size 4096 --create_fernet_key --fernet_key_encrypt ```
+```$ python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/user/Desktop/ --encrypt_private_key False --replace False --public_exponent 65537 --key_size 4096 --create_fernet_key --encrypt_fernet_key ```
 
 ##### Create unencrypted private key, public key and unencrypted fernet key to specified path.
-```$ python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/user/Desktop --bare_private_key --replace  --public_exponent 65537 --key_size 4096 --create_fernet_key --fernet_key_encryption ```
+```$ python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/user/Desktop --bare_private_key --replace  --public_exponent 65537 --key_size 4096 --create_fernet_key --encrypt_fernet_key ```
 
 ##### Create encrypted private key with public key and a public key encrypted fernet key. Replace existing keys.
-```$ python pem_fernet_encryption.py --create_key --private_key_name private_key_test.pem --public_key_name public_key_test.pem --save_path /home/user/Desktop/ --encrypt_private_key --private_key_password 'testpassword' --replace --public_exponent 65537 --key_size 4096 --create_fernet_key --fernet_key_encrypt ```
+```$ python pem_fernet_encryption.py --create_key --private_key_name private_key_test.pem --public_key_name public_key_test.pem --save_path /home/user/Desktop/ --encrypt_private_key --private_key_password 'testpassword' --replace --public_exponent 65537 --key_size 4096 --create_fernet_key --encrypt_fernet_key ```
 
 ##### Create encrypted private key with, public key and a public key encrypted fernet key and keep existing keys.
-``` $ python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/user/Desktop --encrypt_private_key --private_key_password 'apexsingularity01' --no_replace  --public_exponent 65537 --key_size 4096 --create_fernet_key --encrypt_fernet_key ```
+``` $ python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/user/Desktop --encrypt_private_key --private_key_password 'testpassword' --no_replace --public_exponent 65537 --key_size 4096 --create_fernet_key --encrypt_fernet_key ```
 #### Encrypting files and direcotries:
 
 ##### Encrypt a document type using a .pem public key and keep original (delete original with --replace).
