@@ -44,7 +44,7 @@ This script can be used to create encryption key pairs and to encrypt or decrypt
 #### Creating Keys:
 
 ##### Create private key, public key, unencrypted fernet key to specified path (set fern_key_encrypt to True to encrypt fernet key with public key)
-```$ python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/user/Desktop/ --encrypt_private_key False --replace False --public_exponent 65537 --key_size 4096 --create_fernet_key False --fernet_key_encrypt False ```
+```$ python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/user/Desktop/ --encrypt_private_key --replace --public_exponent 65537 --key_size 4096 --create_fernet_key --fernet_key_encrypt ```
 
 ##### Create unencrypted private key, public key and unencrypted fernet key to specified path
 ```$ python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/user/Desktop --bare_private_key --replace  --public_exponent 65537 --key_size 4096 --create_fernet_key --fernet_key_encryption ```
@@ -60,7 +60,7 @@ This script can be used to create encryption key pairs and to encrypt or decrypt
 ```$ python pem_fernet_encryption.py --encrypt --file_type document --public_key /path/to/public_key.pem --save_path /save/path/ --public_key_encryption --no_replace ```
 
 ##### Encrypt a document type using fernet key and keep original (delete original with --replace).
-```$ python pem_fernet_encryption.py --encrypt --file_type document --public_key /path/to/public_key.pem --save_path /save/path/for/decrypted/document/ --fernet_key_encryption --no_replace ```
+```$ python pem_fernet_encryption.py --encrypt --file_type document --public_key /path/to/public_key.pem --save_path /save/path/for/decrypted/document/ --fernet_key_encryption --no_replace --file_path /path/to/document ```
 
 ##### Encrypt document types in a directory recursively using a fernet key.
 ```$ python pem_fernet_encryption.py --encrypt_dir --file_type document --public_key /home/zeefu/Desktop/My\ Keys/Non\ Encrypted\ Keys/fernet.key --dir_path /path/to/directory --fernet_key_encryption ```
