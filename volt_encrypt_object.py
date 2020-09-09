@@ -384,7 +384,6 @@ class Volt:
                         print("[INFO] encrypted file {} saved".format(os.path.join(save_path, file_name)))
 
                     elif fernet_key_encryption:
-                        print("gets here")
                         fernet_cipher = Fernet(key.decode())
                         encrypted_data = fernet_cipher.encrypt(data)
 
@@ -519,7 +518,7 @@ class Volt:
                         file.write(decrypted_data)
                     file.close()
 
-                    print('[INFO] {} decrypted. saved as {}'.format(encrypted_file_name, new_file_name))
+                    print('[INFO] {} decrypted. encrypted file replaced'.format(encrypted_file_name))
 
         except Exception as e:
             logging.error(traceback.format_exc())
