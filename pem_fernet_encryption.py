@@ -289,7 +289,7 @@ def parse_arguments(argv):
         help ='produce unencrypted fernet key')
 
         # password must be a string. If None a ValueError exception will be raised.
-    parser.add_argument('--private_key_password', required=False, default= 'password',
+    parser.add_argument('--private_key_password', required=False,
         help ='private key password')
 
     # cryptography parameters
