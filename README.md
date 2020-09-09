@@ -60,10 +60,10 @@ This script can be used to create encryption key pairs and to encrypt or decrypt
 ```$ python pem_fernet_encryption.py --encrypt --file_type document --public_key /path/to/public_key.pem --save_path /save/path/ --public_key_encryption --no_replace --file_path /path/to/file ```
 
 ##### Encrypt a document type using fernet key and keep original (delete original with --replace).
-```$ python pem_fernet_encryption.py --encrypt --file_type document --public_key /path/to/public_key.pem --save_path /save/path/for/decrypted/document/ --fernet_key_encryption --no_replace --file_path /path/to/file ```
+```$ python pem_fernet_encryption.py --encrypt --file_type document --public_key /path/to/fernet.key --save_path /save/path/for/decrypted/document/ --fernet_key_encryption --no_replace --file_path /path/to/file ```
 
 ##### Encrypt document types in a directory recursively using a fernet key.
-```$ python pem_fernet_encryption.py --encrypt_dir --file_type document --public_key /home/zeefu/Desktop/My\ Keys/Non\ Encrypted\ Keys/fernet.key --dir_path /path/to/directory --fernet_key_encryption ```
+```$ python pem_fernet_encryption.py --encrypt_dir --file_type document --public_key /path/to/fernet.key --dir_path /path/to/directory --fernet_key_encryption ```
 
 ##### Encrypt all document types recursively using a fernet key.
 ```$ python pem_fernet_encryption.py --encrypt_dir --all --public_key /path/to/fernet.key --dir_path /path/to/directory/ --fernet_key_encryption --no_replace ```
