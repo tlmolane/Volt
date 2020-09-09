@@ -26,32 +26,51 @@ def main(args):
             if not os.path.exists(args.private_key):
                 raise FileNotFoundError("{} path does not exist".format(args.private_key))
 
-            while number_of_attempts <= max_attempts:
-                private_key_password = getpass.getpass(prompt='Enter private key password: ')
+            if not args.fernet_key_decryption:
 
-                if Volt.private_key_password_match(args.private_key, private_key_password) == False:
-                    number_of_attempts += 1
-                    print("[INFO] incorrect password: number of attempts left {}".format(max_attempts - number_of_attempts))
-                    if number_of_attempts == 3:
-                        print("[INFO] max tries exceeded.")
+                while number_of_attempts <= max_attempts:
+                    private_key_password = getpass.getpass(prompt='Enter private key password: ')
+
+                    if Volt.private_key_password_match(args.private_key, private_key_password) == False:
+                        number_of_attempts += 1
+                        print("[INFO] incorrect password: number of attempts left {}".format(max_attempts - number_of_attempts))
+                        if number_of_attempts == 3:
+                            print("[INFO] max tries exceeded.")
+                            break
+                    elif Volt.private_key_password_match(args.private_key, private_key_password) == None:
                         break
-                elif Volt.private_key_password_match(args.private_key, private_key_password) == None:
-                    break
-                else:
-                    # print("password is correct or not needed")
-                    try:
-                        Volt.decrypt_file_content(args.private_key,
-                                                private_key_password,
-                                                args.file_path,
-                                                save_path = args.save_path,
-                                                fernet_key_decrypt=args.fernet_key_decryption,
-                                                replace = args.replace,
-                                                file_type=args.file_type
-                                                )
-                    except Exception as e:
-                        logging.error(e, exc_info=True)
+                    else:
+                        # print("password is correct or not needed")
+                        print("value of fernet_key_decryption", args.fernet_key_decryption)
+                        try:
+                            Volt.decrypt_file_content(args.private_key,
+                                                    private_key_password,
+                                                    args.file_path,
+                                                    save_path = args.save_path,
+                                                    fernet_key_decrypt=args.fernet_key_decryption,
+                                                    replace = args.replace,
+                                                    file_type=args.file_type
+                                                    )
+                        except Exception as e:
+                            logging.error(e, exc_info=True)
 
-                    break
+                        break
+            else:
+                private_key_password = None
+                print("value of fernet_key_decryption", args.fernet_key_decryption)
+                try:
+
+                    Volt.decrypt_file_content(args.private_key,
+                                            private_key_password,
+                                            args.file_path,
+                                            save_path = args.save_path,
+                                            fernet_key_decrypt=args.fernet_key_decryption,
+                                            replace = args.replace,
+                                            file_type=args.file_type
+                                            )
+                except Exception as e:
+                    logging.error(e, exc_info=True)
+
         
         if args.decrypt_dir and (args.all or args.file_type):
 
