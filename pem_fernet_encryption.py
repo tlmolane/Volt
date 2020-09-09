@@ -1,4 +1,4 @@
-from volt_encrypt import Volt
+from volt_encrypt_object import Volt
 import password_hex
 import key_sorting
 import traceback
