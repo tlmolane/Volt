@@ -22,6 +22,8 @@ python pem_fernet_encryption.py --encrypt_dir --all --public_key /home/zeefu/Des
 # decrypt all document types recursively 
 python pem_fernet_encryption.py --decrypt_dir --file_type document --private_key /home/zeefu/Desktop/My\ Keys/Non\ Encrypted\ Keys/fernet.key --dir_path /home/zeefu/Desktop/test/ --fernet_key_decryption --all
 
+# decrypt file type using private key
+python /home/zeefu/Documents/Programming/Volt/pem_fernet_encryption.py --decrypt --private_key /home/zeefu/Desktop/My\ Keys/Encrypted\ Keys/private_key.pem --file_path /home/zeefu/Desktop/My\ Keys/Encrypted\ Keys/fernet.key --save_path  /home/zeefu/Desktop/My\ Keys/Encrypted\ Keys/ --no_replace -q -t script
 
 
 
