@@ -25,8 +25,10 @@ def main(args):
 
             if not os.path.exists(args.private_key):
                 raise FileNotFoundError("{} path does not exist".format(args.private_key))
-
+            
+            print(args.fernet_key_decryption)
             if args.private_key_decryption and not args.fernet_key_decryption:
+                print("private!")
 
                 while number_of_attempts <= max_attempts:
                     private_key_password = getpass.getpass(prompt='Enter private key password: ')
@@ -57,7 +59,9 @@ def main(args):
                         break
             else:
                 private_key_password = None
-                print("value of fernet_key_decryption", args.fernet_key_decryption)
+                # print("value of fernet_key_decryption", args.fernet_key_decryption)
+                # print("value of private key encryption", args.private_key_decryption)
+                # print(private_key_password)
                 try:
 
                     Volt.decrypt_file_content(args.private_key,
@@ -278,7 +282,7 @@ def parse_arguments(argv):
         help ='encryption using public key as opposed to fernet key')
     parser.add_argument('-k','--fernet_key_decryption', required=False, default=False, action='store_true',
         help ='decryption using fernet key')
-    parser.add_argument('-q','--private_key_decryption', required=False, dest='fernet_key_decryption', action='store_false',
+    parser.add_argument('-q','--private_key_decryption', required=False, dest='private_key_decryption', action='store_true',
         help ='decryption using private key')
 
     # creating private, public and fernet keys.
