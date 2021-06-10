@@ -57,6 +57,7 @@ This script can be used to create encryption key pairs and to encrypt or decrypt
 #### Encrypting files and direcotries:
 
 ##### Encrypt a document type using a .pem public key and keep original (delete original with --replace).
+```$ python pem_fernet_encryption.py --encrypt --file_type document --public_key /path/to/public_key.pem --save_path /save/path/ --public_key_encryption --replace --file_path /path/to/file ```
 
 ##### Encrypt a document type using fernet key and keep original (delete original with --replace).
 ```$ python pem_fernet_encryption.py --encrypt --file_type document --public_key /path/to/fernet.key --save_path /save/path/for/decrypted/document/ --fernet_key_encryption --replace --file_path /path/to/file ```
@@ -72,15 +73,17 @@ This script can be used to create encryption key pairs and to encrypt or decrypt
 ##### Decrypt file type content using fernet key (give path to fernet key)
 ```$ python pem_fernet_encryption.py --decrypt --private_key /path/to/fernet.key --file_path /path/to/encrypted/file --save_path /save/path/ --fernet_key_decryption --no_replace --file_type <file type> ```
 
-##### Decrypt file type content using private key 
-```$ python pem_fernet_encryption.py --decrypt --private_key /path/to/private_key.pem --file_path /path/to/encrypted/file --save_path /save/path/ --private_key_decryption --file_type <file type> ```
-
+##### Decrypt file type content using private key (keep original with --no_replace) 
+```$ python pem_fernet_encryption.py --decrypt --private_key /path/to/private_key.pem --file_path /path/to/encrypted/file --save_path /save/path/ --private_key_decryption --file_type <file type> --no_replace --private_key_decryption -file_type <file_type> ```
 
 ##### Decrypt all file types in directory using fernet key (--all)
 ```$ python pem_fernet_encryption.py --decrypt_dir --private_key /path/to/fernet.key --dir_path /path/to/encrypted/file --fernet_key_decryption --all --no_replace ```
 
 ##### Decrypt file of specified existing type in directory using fernet key 
 ```$ python pem_fernet_encryption.py --decrypt_dir --private_key /path/to/fernet.key --file_path /path/to/encrypted/file --fernet_key_decryption --file_type document --no_replace ```
+
+##### Decyrpt file using fernet key 
+```$ python pem_fernet_encryption.py --decrypt --private_key /path/to/fernet.key --file_path /full/path/to/file/ --save_path  /save/path/ --no_replace --fernet_key_decryption --file_type <file type> ```
 
 ## Project status
 Slow development because of other commitments but would like to add new features:  
