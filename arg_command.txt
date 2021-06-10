@@ -1,0 +1,41 @@
+
+# Create private key, public key, unencrypted fernet key to desktop. 
+python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/zeefu/Desktop --encrypt_private_key False --replace False --public_exponent 65537 --key_size 4096 --create_fernet_key False --fernet_key_encrypt False
+
+# Create unencrypted private key, public key and unencrypted fernet key to desktop
+python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/zeefu/Desktop --bare_private_key --replace  --public_exponent 65537 --key_size 4096 --create_fernet_key --fernet_key_encryption 
+
+# create encrypted private key with, public key and a public key encrypted fernet key. 
+python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/zeefu/Desktop --encrypt_private_key --private_key_password 'apexsingularity01' --replace  --public_exponent 65537 --key_size 4096 --create_fernet_key --encrypt_fernet_key
+
+# create encrypted private key with, public key and a public key encrypted fernet key and keep existing keys.
+python pem_fernet_encryption.py --create_key --private_key_name private_key.pem --public_key_name public_key.pem --save_path /home/zeefu/Desktop --encrypt_private_key --private_key_password 'apexsingularity01' --no_replace  --public_exponent 65537 --key_size 4096 --create_fernet_key --encrypt_fernet_key 
+
+# encrypt a document type recursively directory using a fernet key.
+
+python pem_fernet_encryption.py --encrypt_dir --file_type document --public_key /home/zeefu/Desktop/My\ Keys/Non\ Encrypted\ Keys/fernet.key --dir_path /home/zeefu/Desktop/test/ --fernet_key_encryption
+
+# encrypt all document types recursively using a fernet key. replace the original.
+
+python pem_fernet_encryption.py --encrypt_dir --all --public_key /home/zeefu/Desktop/My\ Keys/Non\ Encrypted\ Keys/fernet.key --dir_path /home/zeefu/Desktop/test/ --fernet_key_encryption --no_replace
+
+# decrypt all document types recursively 
+python pem_fernet_encryption.py --decrypt_dir --file_type document --private_key /home/zeefu/Desktop/My\ Keys/Non\ Encrypted\ Keys/fernet.key --dir_path /home/zeefu/Desktop/test/ --fernet_key_decryption --all
+
+# decrypt file type using private key
+python /home/zeefu/Documents/Programming/Volt/pem_fernet_encryption.py --decrypt --private_key /home/zeefu/Desktop/My\ Keys/Encrypted\ Keys/private_key.pem --file_path /home/zeefu/Desktop/My\ Keys/Encrypted\ Keys/fernet.key --save_path  /home/zeefu/Desktop/My\ Keys/Encrypted\ Keys/ --no_replace -q -t script
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

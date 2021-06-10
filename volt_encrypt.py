@@ -21,8 +21,8 @@ import re
 
 """
 Author: Tshepo L. Molane
-Git: ZeefuApx
-email: tmolane@gmail.com
+Git: tlmolane
+email: tlmolane@protonmail.com
 """
 
 
@@ -36,6 +36,9 @@ class Volt:
                 'document': ['', 'PDF', 'pdf', 'txt', 'xlsx', 'docx', 'odt'],
                 'file': ['zip', 'tar', 'pickle', 'pub', 'key'],
                 'script': [ 'py', 'java', 'key', '']}
+                
+    all_files = list(set([y for x in list(files_dict.values()) for y in x]))
+    all_types = [i for i in list(files_dict.keys())]
 
     def __init__(self, first, last):
 
@@ -599,7 +602,7 @@ class Volt:
                         # you can append hmac here
 
 
-        except Exception as e:
+        except Exception:
             return logging.error(traceback.format_exc())
 
     @staticmethod
@@ -641,7 +644,7 @@ class Volt:
                 elif len(private_key_password) == 0:
                     # print("gets here 3")
                     private_key_password = None
-
+                
                 try:
 
                     with open(private_key_path, 'rb') as key_file:
@@ -653,7 +656,7 @@ class Volt:
 
                     key_file.close()
 
-                except ValueError as e:
+                except ValueError:
                     logging.error(traceback.format_exc())
 
                 try:
@@ -729,6 +732,23 @@ class Volt:
         except Exception as e:
             logging.error(traceback.format_exc())
 
+
+    @staticmethod
+    def extention(path_to_file):
+        return path_to_file.split('/')[-1].split('.')[-1]
+
+    @staticmethod
+    def type_list(dictionary, type_,folder_path):
+        try:
+            path_list = []
+            for r, d, f in os.walk(folder_path):
+                for file in f:
+                    if Volt.extention(os.path.abspath(file)) in dictionary[type_]:
+                        path_list.append((r, (os.path.join(r, file))))
+            return path_list
+        except Exception as e:
+            print(e) 
+
     def create_keys(self, type, private_key_name = 'private_key', public_key_name = 'public_key',
                     pickle_file='passwords.pickle', ext = '.pem', private_key_password = None,
                     encryption = False, replace = False, pb_exp = 65537, ky_size = 4096):
@@ -784,7 +804,7 @@ class Volt:
             else:
                 raise ValueError("[INFO] ValueError; save_path must be default")
 
-        except ValueError:
+        except ValueError as e:
             print(e)
 
         #print('gets here')
@@ -1043,145 +1063,4 @@ class Volt:
 
 
 
-    # def key_pair_paths(self, type):
-    #     try:
-    #         print('this')
-    #         if self.volt_exists() == True and self.type_exists(type) == True:
-    #             private_key_location = os.path.join(self.path)
-    #
-    #         else:
-    #             raise FileNotFoundError
-    #
-    #     except Exception as e:
-    #         print(e)
-    #     pass
-
-
-#-------------------------------------------------------------------test field 1
-# volt_1 = Volt('Tshepo', 'Molane')
-# volt_2 = Volt("zeefu", "apx")
-# save_path = volt_1.path
-# save_path = volt_2.path
-# type = "social"
-# type_2 = "social"
-# type_3 = 'development'
-
-
-# print(volt_1.full_name)
-# print(volt_1.path)
-#print(volt_1.create_volt('development'))
-#volt_2.create_volt_profile()
-#print(volt_2.volt_exists())
-#volt_2.remove_volt_profile()
-
-#print(volt_2.volt_exists())
-#print(volt_1.keys_exist(type = type))
-#print(volt_1.dict_exist(type = type, dict_name = 'passwords.pickle'))
-
-# ----- pass match test:
-# end of pass match test.
-
-# view key test
-# f = volt_1.view_keys(private_key_name = 'private_key',
-#             public_key_name = 'public_key', private=True, public=False)
-#
-# for i in f:
-#     print(i, end='')
-
-# end of view key_test
-
-# decrypt test:
-
-# d = volt_1.decrypt(type, private_key_password = 'test',  dict_name = 'passwords.pickle', private_key_name = 'private_key',
-#                     public_key_name = 'public_key')
-# print(d)
-#-------- ---------------------------------------------------end of test field 1
-
-# ------------------------------------------------------------------test field 2
-
-# volt_1.create_volt_type(type="social")
-# volt_1.create_keys(type='social',
-#                     private_key_name = 'private_key',
-#                     public_key_name = 'public_key',
-#                     pickle_file='passwords.pickle', ext = '.pem',
-#                     private_key_password = None,
-#                     encryption = False,
-#                     replace = False,
-#                     pb_exp = 65537,
-#                     ky_size = 4096)
-#
-# lines = volt_1.view_keys(private_key_name = 'private_key.pem',
-#                         public_key_name = 'public_key.pem',
-#                         private=False, public= True)
-#
-# for line in lines:
-#     print(line, end = '')
-#------------------------------------------------------------end of test field 2
-
-
-# test field 3
-# private_key_name = 'private_key.pem'
-# public_key_name = 'public_key.pem'
-# save_path = '/home/zeefu/Desktop/'
-# Volt.createKeys(private_key_name,
-#                 public_key_name,
-#                 save_path,
-#                 ext ='.pem',
-#                 private_key_password=None,
-#                 encryption = False,
-#                 replace = False,
-#                 pb_exp = 65537,
-#                 ky_size = 4096,
-#                 fernet_key = True,
-#                 encrypt_fernet_key=False)
-# end of test field 3
-
-
-#------------------------------------------------------------------test_field 4
-# p = volt_1.decrypt(type='social',
-#             private_key_password = '',
-#             dict_name='passwords.pickle',
-#             private_key_name = 'private_key',
-#             public_key_name = 'public_key')
-#
-# print(p)
-# e = volt_1.encrypt(type = 'social',
-#             decrypted_dict = p,
-#             password = 'test_',
-#             account = 'test_account',
-#             dict_name = 'passwords.pickle',
-#             public_key_name = 'public_key')
-#
-#
-#
-#
-# # print(Volt.files_dict['document
-#
-# test_func = Volt.encrypt_file_content('/home/zeefu/Desktop/public_key.pem',
-#                                     '/home/zeefu/Desktop/crypto_stuff.txt',
-#                                     '/home/zeefu/Desktop/',
-#                                     hash_sig=True,
-#                                     replace=False,
-#                                     file_type='document')
-#
-# public_key_path = '/home/zeefu/Desktop/public_key.pem'
-# private_key_path = '/home/zeefu/Desktop/private_key.pem'
-# full_file_path = '/home/zeefu/Desktop/github-recovery-codes.txt'
-# fernet_key_path = '/home/zeefu/Desktop/fernet.key'
-# save_path = '/home/zeefu/Desktop/'
-# Volt.encrypt_file_content(fernet_key_path,
-#                     full_file_path,
-#                     save_path,
-#                     fernet_key_encryption=True,
-#                     replace=False,
-#                     file_type='document')
-#
-# Volt.decrypt_file_content(private_key_path,
-#                         private_key_password='',
-#                         encrypted_file_path=fernet_key_path,
-#                         save_path=save_path,
-#                         fernet_key_decrypt=False,
-#                         replace=True,
-#                         file_type='file')
-
-# -----------------------------------------------------------end of test_field 4
+    
