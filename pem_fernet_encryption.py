@@ -13,6 +13,7 @@ import sys
 import os
 import re
 
+
 def main(args):
 
     try:
@@ -235,7 +236,6 @@ def main(args):
     except Exception as e:
         raise
     return
-
 
 
 def parse_arguments(argv):
