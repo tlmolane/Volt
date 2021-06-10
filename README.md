@@ -60,7 +60,6 @@ This script can be used to create encryption key pairs and to encrypt or decrypt
 
 ##### Encrypt a document type using fernet key and keep original (delete original with --replace).
 ```$ python pem_fernet_encryption.py --encrypt --file_type document --public_key /path/to/fernet.key --save_path /save/path/for/decrypted/document/ --fernet_key_encryption --replace --file_path /path/to/file ```
->>>>>>> feature/mega_cloud
 
 ##### Encrypt document types in a directory recursively using a fernet key.
 ```$ python pem_fernet_encryption.py --encrypt_dir --file_type document --public_key /path/to/fernet.key --dir_path /path/to/directory --fernet_key_encryption ```
