@@ -51,8 +51,13 @@ def create_keys(private_key_name, public_key_name,
         with open(os.path.join(save_path, public_key_name + '.pem'), 'wb') as f:
             f.write(pem_2)
             f.close()
+
+        print(os.path.exists(os.path.join(save_path,private_key_name + '.pem')))
+        return os.path.exists(os.path.join(save_path,private_key_name + '.pem'))
+
     except Exception as e:
         print(e)
+        
 
 # abs_path = os.path.dirname(os.path.abspath(__file__))
 
