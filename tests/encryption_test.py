@@ -30,14 +30,12 @@ class TestCreateKeys(unittest.TestCase):
         # print(full_file_path)
     
     def test_decrypt_file_content(self):
-        private_key_path = 
-        private_key_password =
-        encrypted_file_path = 
-        save_path = 
+        private_key_path = '/home/zeefu/Desktop/My Keys/Non Encrypted Keys/fernet.key'
+        private_key_password =None
+        encrypted_file_path = '/home/zeefu/Desktop/crypto_Stuff_1.txt'
+        save_path = '/home/zeefu/Desktop/'
         fernet_key_decrypt=True
         file_type='document'
-
-
         pass
 
         
