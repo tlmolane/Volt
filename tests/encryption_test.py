@@ -45,7 +45,7 @@ class TestCreateKeys(unittest.TestCase):
                                     fernet_key_decrypt= True,
                                     file_type= file_type)
         
-        with open(full_file_path, 'r') as file:
+        with open(original_file_path, 'r') as file:
             data = file.read()
             file.close()
             self.assertEqual(data, decrypt_file_result)
