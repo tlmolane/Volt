@@ -486,12 +486,16 @@ class Volt:
                         new_file.write(decrypted_data)
                     new_file.close()
 
+                    return decrypted_data
+
                 elif replace:
 
                     with open(encrypted_file_path, 'wb') as file:
                         file. truncate(0)
                         file.write(decrypted_data)
                     file.close()
+
+                    return decrypted_data
 
 
 
@@ -520,6 +524,8 @@ class Volt:
 
                     print('[INFO] {} decrypted. saved as {}'.format(encrypted_file_name, new_file_name))
 
+                    return decrypted_data
+
                 elif replace:
 
                     # os.remove(encrypted_file_path)
@@ -530,6 +536,8 @@ class Volt:
                     file.close()
 
                     print('[INFO] {} decrypted. encrypted file replaced'.format(encrypted_file_name))
+
+                    return decrypted_data
 
         except Exception as e:
             logging.error(traceback.format_exc())
