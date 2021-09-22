@@ -486,16 +486,12 @@ class Volt:
                         new_file.write(decrypted_data)
                     new_file.close()
 
-                    return decrypted_data
-
                 elif replace:
 
                     with open(encrypted_file_path, 'wb') as file:
                         file. truncate(0)
                         file.write(decrypted_data)
                     file.close()
-
-                    return decrypted_data
 
 
 
